@@ -4,5 +4,6 @@ const services = require("../services/class-services")
 
 
 router.post("/addstudent", services.AddStudent)
+// router.post("/addstudent", services.AddStudent)
 
 module.exports = router
