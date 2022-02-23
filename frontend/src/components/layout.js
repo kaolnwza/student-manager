@@ -1,19 +1,22 @@
 import React from 'react'
 import '../nav.css'
+import { Link } from 'react-router-dom'
+import { MdRoofing, MdTableView } from "react-icons/md";
 
 export default function layout(props) {
   return (
     <div className="container-fluid bg-brown" >
-    <div className="row ">
+    <div className="row pl-5">
       
-      <div className="col-sm align-items-center ">
-        <span className=" text-left "></span>
+      <div className="col-sm px-5">
         <span className=" display-5 ">Student Manager </span>
       </div>
     </div>
-    <div className="row positon-sticky ">
-      <div className="col-sm-auto p-0">
-        <div className=''>
+    <div className="row positon-sticky 
+              align-items-center  
+              ">
+      <div className="col-sm-auto p-0 ">
+        <div>
           <ul
             className="
               nav nav-pills nav-flush
@@ -21,23 +24,26 @@ export default function layout(props) {
               mb-auto
               mx-4
               text-center
-              align-items-center
               
             "
           >
-            
-            <li className="pl-2 iconEffect">
-              1
+            <Link to='/'>
+            <li className="pl-2 my-4 ">
+              <MdRoofing className='icon-link'/>
             </li>
+            </Link>
+            <Link to='/manage'>
             <li
-              className="pl-2 iconEffect"
+              className="pl-2 my-4"
             >
-            2
+              <MdTableView className='icon-link'/>
+
             </li>
+            </Link>
           </ul>
         </div>
       </div>
-      <div className="col-sm  " style={{height:'83.3vh'}}>
+      <div className="col-sm content" style={{height:'92vh'}}>
         {props.children}
         <div
         >

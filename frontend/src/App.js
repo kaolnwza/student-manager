@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'
 
 import Layout from './components/layout';
 import Home from './Home';
