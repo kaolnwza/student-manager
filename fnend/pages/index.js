@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from "react"
-import { Container } from 'react-bootstrap';
 const Home = () => {
   const [data, setData] = useState('null')
   const [loading, setLoading] = useState(false)
@@ -30,11 +29,10 @@ const Home = () => {
     )
   }
   return (<>
-    <Container className="text-center" style={{ marginTop: '5vw' }}>
-      <h1 >Home</h1>
 
-      <div>{data.name}</div>
-    </Container>
+    <h1 >Home</h1>
+
+    <div >{data.name}</div>
   </>
   )
 }

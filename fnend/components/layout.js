@@ -3,7 +3,7 @@ import { MdRoofing, MdTableView } from "react-icons/md";
 
 export default function layout({ children }) {
   return (
-    <div className="container-fluid bg-brown " >
+    <div className="container-fluid bg-brown " style={{ background: '#f6eeea', fontFamily: 'Roboto Slab' }} >
       <div className="row pl-5 position-fixed">
 
         <div className="col-sm px-5 py-1">
@@ -13,7 +13,7 @@ export default function layout({ children }) {
       <div className="row positon-sticky 
               align-items-center  
               ">
-        <div className="col-sm-auto p-0 ">
+        <div className="col-sm-auto p-0 position-fixed">
           <div>
             <ul
               className="
@@ -30,7 +30,7 @@ export default function layout({ children }) {
                   <MdRoofing className='icon-link' size={40} />
                 </li>
               </Link>
-              <Link href='/manage'>
+              <Link href='/Manage'>
                 <li
                   className="pl-2 my-4"
                 >
