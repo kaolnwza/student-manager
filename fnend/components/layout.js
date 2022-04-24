@@ -3,7 +3,7 @@ import { MdRoofing, MdTableView } from "react-icons/md";
 
 export default function layout({ children }) {
   return (
-    <div className="container-fluid bg-brown " style={{ background: '#f6eeea', fontFamily: 'Roboto Slab' }} >
+    <div className="container-fluid bg-brown " style={{ fontFamily: 'Roboto Slab' }} >
       <div className="row pl-5 position-fixed">
 
         <div className="col-sm px-5 py-1">
