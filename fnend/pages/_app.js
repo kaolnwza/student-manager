@@ -7,7 +7,12 @@ import { Container } from 'react-bootstrap';
 
 function MyApp({ Component, pageProps }) {
   return (<Layout >
-    <Container className="" style={{ marginTop: '5vw' }}>
+    <Container className="" style={{
+      height: '100%',
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
       <Component {...pageProps} />
     </Container>
   </Layout>)
