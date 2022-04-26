@@ -17,11 +17,11 @@ const GetByAny = async (table, column, values) => {
     if (resp.err != 200) {
         return ErrorHandling(500, resp.msg)
     }
-    if (resp.rowCount > 1) {
-        return ErrorHandling(200, resp.msg.rows)
-    }
+    // if (resp.rowCount > 1) {
+    //     return ErrorHandling(200, resp.msg.rows)
+    // }
 
-    return ErrorHandling(200, resp.msg.rows[0])
+    return ErrorHandling(200, resp.msg.rows)
 
 }
 
