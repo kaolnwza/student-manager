@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { useEffect, useState } from "react"
+import { useRouter } from 'next/router'
 
 export default function layout({ children }) {
+  const router = useRouter()
+  // console.log(router.route);
   const [login, setLogin] = useState(true)
   return (
     <div className="container-fluid bg-brown " style={{ fontFamily: 'Roboto Slab' }} >
@@ -16,7 +19,7 @@ export default function layout({ children }) {
               ">
         <div className="col-sm-auto p-0 position-fixed">
           <div>
-            <ul
+            {router.route != '/' ? <ul
               className="
               nav nav-pills nav-flush
               flex-sm-column flex-row flex-nowrap
@@ -27,14 +30,12 @@ export default function layout({ children }) {
             "
             >
               <li className="pl-2 my-2 ">
-
-                <Link href='/'>
+                <Link href='/home'>
                   <div>
                     <lord-icon
                       src="https://cdn.lordicon.com/gmzxduhd.json"
                       trigger="morph"
-                      // colors="primary:#121331"
-                      // state="hover-2"
+
                       style={{ width: '4rem', height: '4rem', cursor: 'pointer' }}
                     >
 
@@ -72,7 +73,7 @@ export default function layout({ children }) {
 
 
 
-            </ul>
+            </ul> : null}
           </div>
         </div>
         <div className="col-sm content" style={{

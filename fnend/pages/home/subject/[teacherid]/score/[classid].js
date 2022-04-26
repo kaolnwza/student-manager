@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router'
 
 
-const attendance = () => {
+const score = () => {
     const router = useRouter()
     const { classid } = router.query
-    console.log(router.query);
     return (<>
-    {classid}</>);
+        {classid}
+    </>);
 }
 
-export default attendance;
+export default score;

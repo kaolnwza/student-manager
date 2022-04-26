@@ -1,149 +1,31 @@
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
-import Image from 'next/image'
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Container, Row, Col } from 'react-bootstrap';
 
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
+const login = () => {
+    
+    return (<Row style={{ width: '60%' }}>
+        <Col className='d-flex  align-items-start'>
+            <h1 className='display-4'>Student<br /> Management</h1>
+        </Col>
+        <Col>
+            <Form>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="Enter email" className='w-100' />
 
-// import required modules
-import { Parallax, Pagination, Navigation } from "swiper";
-import Link from "next/link";
+                </Form.Group>
 
-export const getServerSideProps = async () => {
-  const res = await fetch('http://localhost:3001/util/subject/getall')
-  const json = await res.json()
-  return { props: { subjects: json } }
-}
-const Home = ({ subjects }) => {
-  const mockSubject = [
-    {
-      subject_name: 'PROBLEM SOLVING IN INFORMATION TECHNOLOGY',
-      subject_id: '06016304',
-      teacher_id: 'Chotipat'
-    },
-    {
-      subject_name: 'WEB TECHNOLOGY',
-      subject_id: '06016312',
-      teacher_id: 'Chotipat'
-    },
-    {
-      subject_name: 'SERVICE-ORIENTED PROGRAMMING',
-      subject_id: '06016325',
-      teacher_id: 'Chotipat'
-    },
-    {
-      subject_name: 'OBJECT-ORIENTED PROGRAMMING',
-      subject_id: '06016317',
-      teacher_id: 'Chotipat'
-    },
-    {
-      subject_name: 'MOBILE DEVICE PROGRAMMING',
-      subject_id: '06016323',
-      teacher_id: 'Chotipat'
-    },
-  ]
-  // const [data, setData] = useState('null')
-  // const [loading, setLoading] = useState(false)
-  // const [error, setError] = useState(null)
-  // useEffect(
-  //   () => {
-  //     setLoading(true)
-  //     fetch('http://localhost:3001/util/subject/getall')
-  //       .then((res) => res.json())
-  //       .then((json) => {
-  //         setData(json)
-  //       })
-  //       .catch((error) => setError(error))
-  //       .finally(() => setLoading(false))
-  //   },
-  //   [],
-  // )
-  // if (loading) {
-  //   return (
-  //     <div>Loading...</div>
-  //   )
-  // }
-  // if (error) {
-  //   return (
-  //     <div>Error: {error.message}</div>
-  //   )
-  // }
-  return (<>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" />
+                </Form.Group>
 
-    <Swiper
-      style={{
-        "--swiper-navigation-color": "#000",
-        "--swiper-pagination-color": "#000",
-        height: '30vw',
-
-      }}
-      speed={600}
-      parallax={true}
-      pagination={{
-        clickable: true,
-      }}
-      navigation={true}
-      modules={[Parallax, Pagination, Navigation]}
-      className="mySwiper px-5"
-    >
-      <div
-        slot="container-start"
-        className="parallax-bg"
-        style={{
-          background: `#f6eeea`,
-        }}
-        data-swiper-parallax="-55%"
-      ></div>
-      {mockSubject.map((sub, index) => (
-        <SwiperSlide>
-          <Row className="h-100">
-            <Col lg={5} style={{
-              display: 'flex',
-              justifyContent: 'right',
-              alignItems: "center",
-
-            }}>
-              <Image src="/Fresh Folk - Teaching.png" alt="me" width="200%" height="280%" />
-            </Col>
-            <Col lg={7} style={{
-              margin: 'auto'
-            }}>
-              <div className="title" data-swiper-parallax="-300">
-                {sub.subject_name}
-              </div>
-              <div className="subtitle" data-swiper-parallax="-200">
-                Coruse Code : {sub.subject_id}
-              </div>
-              <div className="subtitle" data-swiper-parallax="-200">
-                Teacher : {sub.teacher_id}
-              </div>
-              <Link
-                as={`/subject/${index}`}
-                href={{
-                  pathname: `/subject/${index}`, query: {
-                    sid: sub.subject_id,
-                    name: sub.subject_name,
-                    teacher: sub.teacher_id
-                  }
-                }} >
-                < lord-icon
-                  src="https://cdn.lordicon.com/iifryyua.json"
-                  trigger="morph"
-                  style={{ width: '3rem', height: '3rem', cursor: 'pointer' }}>
-                </lord-icon>
-              </Link>
-            </Col>
-          </Row>
-        </SwiperSlide>
-      ))}
-
-    </Swiper>
-
-  </>
-  )
+                <Button variant="primary" type="submit">
+                    Submit
+                </Button>
+            </Form>
+        </Col>
+    </Row>);
 }
 
-export default Home;
+export default login;
