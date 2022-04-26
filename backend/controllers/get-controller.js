@@ -10,12 +10,23 @@ router.get('/:table/getall', async (req, res) => {
 
     return res.status(resp.err).send(resp.msg)
 })
+
 router.get('/getbyany/:table/:column/:values', async (req, res) => {
     const table = req.params['table']
     const column = req.params['column']
     const values = req.params['values']
 
     const resp = await services.GetByAny(table, column, values)
+
+    return res.status(resp.err).send(resp.msg)
+})
+
+router.get('/getarraybyany/:table/:column/:values', async (req, res) => {
+    const table = req.params['table']
+    const column = req.params['column']
+    const values = req.params['values']
+
+    const resp = await services.GetArrayByAny(table, column, values)
 
     return res.status(resp.err).send(resp.msg)
 })

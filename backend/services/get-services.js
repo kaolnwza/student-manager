@@ -7,7 +7,7 @@ const GetAll = async (table) => {
     if (resp.err != 200) {
         return ErrorHandling(500, resp.msg)
     }
-    return ErrorHandling(500, resp.msg.rows)
+    return ErrorHandling(200, resp.msg.rows)
 
 }
 
@@ -17,9 +17,20 @@ const GetByAny = async (table, column, values) => {
     if (resp.err != 200) {
         return ErrorHandling(500, resp.msg)
     }
-    // if (resp.rowCount > 1) {
-    //     return ErrorHandling(200, resp.msg.rows)
-    // }
+    if (resp.rowCount > 1) {
+        return ErrorHandling(200, resp.msg.rows)
+    }
+
+    return ErrorHandling(200, resp.msg.rows[0])
+
+}
+
+const GetArrayByAny = async (table, column, values) => {
+
+    var resp = await db.GetArrayByAnyQueries(table, column, values)
+    if (resp.err != 200) {
+        return ErrorHandling(500, resp.msg)
+    }
 
     return ErrorHandling(200, resp.msg.rows)
 
@@ -45,4 +56,4 @@ const Eiei = (n1, n2) => {
     return n1 + n2
 }
 
-module.exports = { GetAll, GetByAny, GetByAnyTwoValues }
+module.exports = { GetAll, GetByAny, GetByAnyTwoValues, GetArrayByAny }
