@@ -35,25 +35,31 @@ const attendance = ({ classes }) => {
     }, [key])
 
     return (
-        <Container >
-            <Tabs
-                activeKey={key}
-                onSelect={(k) => setKey(k)}
-                className="mb-3 d-flex justify-content-center "
-            // onClick={() => fetchMyAPI()}
-            >
-                {classes.map((cls, i) =>
-                    <Tab key={i} eventKey={cls.class_id} title={`Sec ${i + 1}`} >
-                        {data.map((at, index) => <p>
-                            {at.class_id}
+        <div className="d-flex justify-content-center w-75">
 
-                            {at.attendance_name}
-                        </p>)}
+            <Container >
 
-                    </Tab>
-                )}
-            </Tabs>
-        </Container>
+                <Tabs
+                    activeKey={key}
+                    onSelect={(k) => setKey(k)}
+                    className="mb-3   justify-content-center "
+                // onClick={() => fetchMyAPI()}
+                >
+                    {classes.map((cls, i) =>
+                        <Tab key={i} eventKey={cls.class_id} title={`Sec ${i + 1}`} >
+                            {data.map((at, index) => <p>
+                                {at.class_id}
+
+                                {at.attendance_name}
+                            </p>)}
+
+
+                        </Tab>
+                    )}
+                </Tabs>
+            </Container>
+        </div>
+
     );
 }
 
