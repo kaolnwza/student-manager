@@ -3,11 +3,11 @@ import { useRouter } from 'next/router'
 import { Tabs, Tab, Row, Col, Container } from 'react-bootstrap';
 
 export const getServerSideProps = async (ctx) => {
-    const resClass = await fetch('http://localhost:3001/util/getarraybyany/class/subject_id/' + ctx.query.classid)
+    const resClass = await fetch('http://localhost:3001/util/getarraybyany/class/subject_id/' + ctx.query.subjectid)
     const classes = await resClass.json()
-    const resAtten = await fetch(`http://localhost:3001/util/getarraybyany/class_attendance/class_id/62002`)
-    const atten = await resAtten.json()
-    console.log(atten);
+    // const resAtten = await fetch(`http://localhost:3001/util/getarraybyany/class_attendance/class_id/62002`)
+    // const atten = await resAtten.json()
+    // console.log(atten);
     return {
         props: {
             classes: classes
@@ -16,23 +16,23 @@ export const getServerSideProps = async (ctx) => {
 }
 const attendance = ({ classes }) => {
     const [key, setKey] = useState(classes[0].class_id);
-    const [data, setData] = useState('null')
+    const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
     useEffect(() => {
         // declare the data fetching function
         const fetchData = async () => {
-            const resAtten = await fetch('http://localhost:3001/util/getarraybyany/class_attendance/class_id/62002');
+            const resAtten = await fetch(`http://localhost:3001/util/getarraybyany/class_attendance/class_id/${key}`);
             const atten = await resAtten.json()
-            console.log(atten);
+            setData(atten)
         }
 
         // call the function
         fetchData()
             // make sure to catch any error
             .catch(console.error);
-    }, [])
+    }, [key])
 
     return (
         <Container >
@@ -44,7 +44,11 @@ const attendance = ({ classes }) => {
             >
                 {classes.map((cls, i) =>
                     <Tab key={i} eventKey={cls.class_id} title={`Sec ${i + 1}`} >
-                        {cls.class_id}
+                        {data.map((at, index) => <p>
+                            {at.class_id}
+
+                            {at.attendance_name}
+                        </p>)}
 
                     </Tab>
                 )}
