@@ -23,8 +23,9 @@ const attendance = ({ classes }) => {
     useEffect(() => {
         // declare the data fetching function
         const fetchData = async () => {
-            const resAtten = await fetch(`http://localhost:3001/util/getarraybyany/class_attendance/class_id/${key}`);
+            const resAtten = await fetch(`http://localhost:3001/attendance/class/${key}`);
             const atten = await resAtten.json()
+            console.log(atten);
             setWeek(atten)
         }
 
@@ -38,8 +39,9 @@ const attendance = ({ classes }) => {
     const fetchStudent = async (id) => {
         const resStudent = await fetch(`http://localhost:3001/util/getarraybyany/student_attendance/attendance_id/${id}`);
         const student = await resStudent.json()
-        setList(student)
         console.log(student);
+
+        setList(student)
     }
 
     return (
@@ -53,6 +55,7 @@ const attendance = ({ classes }) => {
                     className="mb-3   justify-content-center "
                 // onClick={() => fetchMyAPI()}
                 >
+
                     {classes.map((cls, i) =>
                         <Tab key={i} eventKey={cls.class_id} title={`Sec ${i + 1}`} >
 
@@ -120,7 +123,7 @@ const attendance = ({ classes }) => {
 
                         </Tab>
                     )}
-
+                    {key}
 
                 </Tabs>
             </Container>

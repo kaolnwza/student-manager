@@ -5,23 +5,20 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 export const getServerSideProps = async (ctx) => {
-    const resSubject = await fetch('http://localhost:3001/util/getarraybyany/subject/teacher_id/' + ctx.query.teacherid)
-    const subject = await resSubject.json()
-    const resTeacher = await fetch('http://localhost:3001/util/getarraybyany/teacher/teacher_id/' + ctx.query.teacherid)
-    const teacher = await resTeacher.json()
-
-    const resClass = await fetch('http://localhost:3001/util/getarraybyany/class/subject_id/' + subject[0].subject_id)
-    const classes = await resClass.json()
+    const resSubDetail = await fetch('http://localhost:3001/subject/detail/' + ctx.query.courseid)
+    const subjectDetail = await resSubDetail.json()
+    console.log(subjectDetail);
     return {
         props: {
-            course: subject[0],
-            teacher: teacher[0],
-            classes: classes
+            course: subjectDetail
+
         }
     }
 }
 
-const Subject = ({ teacher, course, classes }) => {
+const Subject = ({ course }) => {
+    const router = useRouter()
+    // console.log(router.query.courseid);
     return (<>
         <Row className='h-75 mx-5 justify-content-around' style={{
             background: `linear-gradient(180deg, transparent 20%, #f6eeea 20%)`,
@@ -36,14 +33,14 @@ const Subject = ({ teacher, course, classes }) => {
                 alignItems: 'end',
             }}>
                 <Row >
-                    <h3>{course.subject_id}  {course.subject_name}</h3>
+                    <h3>{router.query.courseid} {course[0].subject_name}</h3>
                     <div>
-                        Teacher : {teacher.teacher_firstname} {teacher.teacher_lastname}
+                        Teacher : {course[0].teacher_firstname} {course[0].teacher_lastname}
                     </div>
                     <h3>Classes</h3>
 
                     <Row className=''>
-                        {classes.map((cls, index) => <Col key={index}>
+                        {course.map((cls, index) => <Col key={index}>
                             {cls.dayweek} <br />
                             {cls.time_start} - {cls.time_end} (Sec {index + 1})
                         </Col>)}
@@ -53,7 +50,7 @@ const Subject = ({ teacher, course, classes }) => {
                         marginTop: '5rem'
                     }}>
                         <Col>
-                            <Link href={{ pathname: `/home/subject/${teacher.teacher_id}/score/${course.subject_id}` }}>
+                            <Link href={{ pathname: `/home/subject/${router.query.courseid}/score/${course[0].class_id}` }}>
 
                                 <div>
                                     <a class="btn">
@@ -69,7 +66,7 @@ const Subject = ({ teacher, course, classes }) => {
                             </Link>
                         </Col>
                         <Col>
-                            <Link href={{ pathname: `/home/subject/${teacher.teacher_id}/attendance/${course.subject_id}` }}>
+                            <Link href={{ pathname: `/home/subject/${router.query.courseid}/attendance/${course[0].class_id}` }}>
 
                                 <div>
                                     <a class="btn">

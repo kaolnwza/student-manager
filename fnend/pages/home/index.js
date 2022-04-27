@@ -97,7 +97,7 @@ const Home = ({ subjects }) => {
               <Link
                 // as={`/home/subject/${sub.teacher_id}`}
                 href={{
-                  pathname: `/home/subject/${sub.teacher_id}`,
+                  pathname: `/home/subject/${sub.subject_id}`,
                   // query: {
                   //   sid: sub.subject_id,
                   //   name: sub.subject_name,
