@@ -40,13 +40,49 @@ const Subject = ({ course }) => {
                     <h3>Classes</h3>
 
                     <Row className=''>
-                        {course.map((cls, index) => <Col key={index}>
-                            {cls.dayweek} <br />
-                            {cls.time_start} - {cls.time_end} (Sec {index + 1})
-                        </Col>)}
+                        {course.map((cls, index) =>
+                            <Col key={index}>
+                                {cls.dayweek} <br />
+                                {cls.time_start} - {cls.time_end} (Sec {index + 1})
+                                <Row className='mb-5'>
+                                    <Col lg={3}>
+                                        <Link href={{ pathname: `/home/subject/${router.query.courseid}/score/${cls.class_id}` }}>
+
+                                            <div>
+                                                <a class="btn">
+                                                    <lord-icon
+                                                        target="a.btn"
+                                                        trigger="morph"
+                                                        src="https://cdn.lordicon.com/nocovwne.json"
+                                                        style={{ height: '3rem', width: '3rem' }}
+                                                    ></lord-icon>
+                                                    <p>Student Score</p>
+                                                </a>
+                                            </div>
+                                        </Link>
+                                    </Col>
+                                    <Col lg={3}>
+                                        <Link href={{ pathname: `/home/subject/${router.query.courseid}/attendance/${cls.class_id}` }}>
+
+                                            <div>
+                                                <a class="btn">
+                                                    <lord-icon
+                                                        target="a.btn"
+                                                        trigger="morph"
+                                                        src="https://cdn.lordicon.com/tvyxmjyo.json"
+                                                        style={{ height: '3rem', width: '3rem' }}
+                                                    ></lord-icon>
+                                                    <p>Student attendance</p>
+                                                </a>
+                                            </div>
+                                        </Link>
+                                    </Col>
+
+                                </Row>
+                            </Col>)}
                     </Row>
 
-                    <Row className='text-center mb-3' style={{
+                    {/* <Row className=' mb-3' style={{
                         marginTop: '5rem'
                     }}>
                         <Col>
@@ -58,7 +94,7 @@ const Subject = ({ course }) => {
                                             target="a.btn"
                                             trigger="morph"
                                             src="https://cdn.lordicon.com/nocovwne.json"
-                                            style={{ height: '4rem', width: '4rem' }}
+                                            style={{ height: '3rem', width: '3rem' }}
                                         ></lord-icon>
                                         <p>Student Score</p>
                                     </a>
@@ -74,7 +110,7 @@ const Subject = ({ course }) => {
                                             target="a.btn"
                                             trigger="morph"
                                             src="https://cdn.lordicon.com/tvyxmjyo.json"
-                                            style={{ height: '4rem', width: '4rem' }}
+                                            style={{ height: '3rem', width: '3rem' }}
                                         ></lord-icon>
                                         <p>Student attendance</p>
                                     </a>
@@ -82,7 +118,7 @@ const Subject = ({ course }) => {
                             </Link>
                         </Col>
 
-                    </Row>
+                    </Row> */}
                 </Row>
 
             </Col>

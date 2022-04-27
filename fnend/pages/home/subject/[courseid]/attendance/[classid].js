@@ -3,9 +3,9 @@ import { useRouter } from 'next/router'
 import { Tabs, Tab, Row, Col, Container, Nav } from 'react-bootstrap';
 
 export const getServerSideProps = async (ctx) => {
-    const resClass = await fetch('http://localhost:3001/util/getarraybyany/class/subject_id/' + ctx.query.subjectid)
+    const resClass = await fetch('http://localhost:3001/attendance/class/' + ctx.query.classid)
     const classes = await resClass.json()
-
+    console.log(classes);
     return {
         props: {
             classes: classes
@@ -13,27 +13,27 @@ export const getServerSideProps = async (ctx) => {
     }
 }
 const attendance = ({ classes }) => {
-    const [key, setKey] = useState(classes[0].class_id);
+    const [key, setKey] = useState(0);
 
     const [week, setWeek] = useState([''])
 
     const [atdid, setAtdid] = useState(0);
     const [studentlist, setList] = useState([])
 
-    useEffect(() => {
-        // declare the data fetching function
-        const fetchData = async () => {
-            const resAtten = await fetch(`http://localhost:3001/attendance/class/${key}`);
-            const atten = await resAtten.json()
-            console.log(atten);
-            setWeek(atten)
-        }
+    // useEffect(() => {
+    //     // declare the data fetching function
+    //     const fetchData = async () => {
+    //         const resAtten = await fetch(`http://localhost:3001/attendance/class/${key}`);
+    //         const atten = await resAtten.json()
+    //         console.log(atten);
+    //         setWeek(atten)
+    //     }
 
-        // call the function
-        fetchData()
-            // make sure to catch any error
-            .catch(console.error);
-    }, [key])
+    //     // call the function
+    //     fetchData()
+    //         // make sure to catch any error
+    //         .catch(console.error);
+    // }, [key])
 
 
     const fetchStudent = async (id) => {
@@ -57,9 +57,9 @@ const attendance = ({ classes }) => {
                 >
 
                     {classes.map((cls, i) =>
-                        <Tab key={i} eventKey={cls.class_id} title={`Sec ${i + 1}`} >
-
-                            <Tab.Container
+                        <Tab key={i} eventKey={i} title={`${cls[i].attendance_id}`} >
+                            {/* {cls} */}
+                            {/* <Tab.Container
                                 activeKey={atdid}
                                 onSelect={(k) => setAtdid(k)}
                                 id="left-tabs-example"
@@ -68,11 +68,7 @@ const attendance = ({ classes }) => {
                                     <Col sm={3}>
                                         <Nav variant="pills" className="flex-column">
                                             {week.map((week, j) =>
-                                                <Nav.Item key={j} onClick={() =>
-                                                    fetchStudent(week.attendance_id)
-                                                }>
-
-
+                                                <Nav.Item key={j}>
                                                     <Nav.Link eventKey={week.attendance_id}>{week.attendance_name}</Nav.Link>
                                                 </Nav.Item>
                                             )}
@@ -117,13 +113,13 @@ const attendance = ({ classes }) => {
 
                                     </Col>
                                 </Row>
-                            </Tab.Container>
+                            </Tab.Container> */}
 
 
 
                         </Tab>
                     )}
-                    {key}
+                    {/* {key} */}
 
                 </Tabs>
             </Container>
