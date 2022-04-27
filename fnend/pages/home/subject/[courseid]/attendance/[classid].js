@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/router'
-import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl } from 'react-bootstrap';
+import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Form } from 'react-bootstrap';
 
 export const getServerSideProps = async (ctx) => {
     const resClass = await fetch('http://localhost:3001/attendance/class/' + ctx.query.classid)
     const classes = await resClass.json()
-    console.log(classes);
+    // console.log(classes);
     return {
         props: {
             classes: classes
@@ -16,9 +16,14 @@ const attendance = ({ classes }) => {
     const [key, setKey] = useState(0);
     const [show, setShow] = useState(false);
     const [form, setForm] = useState('');
-
+    const [selectWeek, setSelectWeek] = useState(0);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [edit, setEdit] = useState(false);
+
+    const handleEditClose = () => setEdit(false);
+    const handleEditShow = () => setEdit(true);
 
     return (
         <div className="d-flex justify-content-center w-75 h-75">
@@ -95,7 +100,7 @@ const attendance = ({ classes }) => {
                     )}
 
                 </Tabs>
-                <a class="btn text-center w-100">
+                <a class="btn text-center w-100" onClick={handleEditShow}>
                     <lord-icon
                         target="a.btn"
                         src="https://cdn.lordicon.com/wloilxuq.json"
@@ -106,6 +111,8 @@ const attendance = ({ classes }) => {
                     <p>Edit Attendance</p>
                 </a>
             </Container>
+
+            {/* Add Modal */}
             <Modal
                 show={show}
                 onHide={handleClose}
@@ -124,12 +131,25 @@ const attendance = ({ classes }) => {
                             value={form}
                             onChange={(e) => setForm(e.target.value)}
                         />
+                        <Button className="btn py-0  border-success" variant="" onClick={() => {
+                            setTimeout(() => {
+                                setShow(false)
+                            }, 1500)
+                        }}>
+                            Add
+                            <lord-icon
+                                src="https://cdn.lordicon.com/mecwbjnp.json"
+                                target="Button.btn"
+                                trigger="click"
+                                style={{ height: '2rem', width: '2rem' }}>
+                            </lord-icon>
+                        </Button>
 
                     </InputGroup>
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" className="py-1 btn" onClick={() => {
+                    <Button variant="light" className="py-1 btn" onClick={() => {
                         setTimeout(() => {
                             setShow(false)
                         }, 50)
@@ -139,24 +159,55 @@ const attendance = ({ classes }) => {
                             src="https://cdn.lordicon.com/eflfmgmj.json"
                             trigger="click"
                             target="Button.btn"
-                            colors="primary:#fff"
+                            colors="primary:#000"
                             state="hover-1"
                             style={{ height: '1.5rem', width: '1.5rem' }}>
                         </lord-icon>
                     </Button>
-                    <Button className="btn py-0" variant="light" onClick={() => {
-                        setTimeout(() => {
-                            setShow(false)
-                        }, 1500)
-                    }}>
-                        Add
-                        <lord-icon
-                            src="https://cdn.lordicon.com/mecwbjnp.json"
-                            target="Button.btn"
-                            trigger="click"
-                            style={{ height: '2rem', width: '2rem' }}>
-                        </lord-icon>
+
+                </Modal.Footer>
+            </Modal>
+
+            {/* Edit Modal */}
+            <Modal
+                show={edit}
+                onHide={handleEditClose}
+                backdrop="static"
+                keyboard={false}
+                style={{ fontFamily: 'roboto slab' }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Attendance</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                    <Form.Group controlId="formBasicSelect">
+                        <Form.Label>Select Week </Form.Label>
+                        <Form.Select
+                            value={selectWeek}
+                            onChange={e => {
+                                setSelectWeek(e.target.value);
+                            }}
+                        >
+                            <option value={0} disabled>--select--</option>
+
+                            {classes.map((cls, i) => <>
+                                {console.log(cls[i].attendance_name)}
+                                <option value={cls[i].attendance_id}> {cls[i].attendance_name} </option>
+
+                                
+                            </>
+                            )}
+
+                        </Form.Select>
+                        ID : {selectWeek}
+                    </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleEditClose}>
+                        Close
                     </Button>
+                    <Button variant="primary">Understood</Button>
                 </Modal.Footer>
             </Modal>
         </div >
