@@ -17,10 +17,13 @@ const attendance = ({ classes }) => {
     const [show, setShow] = useState(false);
     const [form, setForm] = useState('');
     const [selectWeek, setSelectWeek] = useState(0);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     const [edit, setEdit] = useState(false);
+
+    const rounter = useRouter()
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const handleEditClose = () => setEdit(false);
     const handleEditShow = () => setEdit(true);
@@ -28,8 +31,8 @@ const attendance = ({ classes }) => {
     return (
         <div className="d-flex justify-content-center w-75 h-75">
 
-            <Container >
-                <a class="btn text-center w-100" onClick={handleShow}>
+            <Container className="text-center">
+                <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
                     <lord-icon
                         target="a.btn"
                         src="https://cdn.lordicon.com/auvicynv.json"
@@ -100,7 +103,7 @@ const attendance = ({ classes }) => {
                     )}
 
                 </Tabs>
-                <a class="btn text-center w-100" onClick={handleEditShow}>
+                <a class="btn " onClick={handleEditShow}>
                     <lord-icon
                         target="a.btn"
                         src="https://cdn.lordicon.com/wloilxuq.json"
@@ -132,8 +135,11 @@ const attendance = ({ classes }) => {
                             onChange={(e) => setForm(e.target.value)}
                         />
                         <Button className="btn py-0  border-success" variant="" onClick={() => {
+                            console.log(rounter.query.classid)
+                            console.log(form)
                             setTimeout(() => {
                                 setShow(false)
+                                setForm('')
                             }, 1500)
                         }}>
                             Add
@@ -192,10 +198,10 @@ const attendance = ({ classes }) => {
                             <option value={0} disabled>--select--</option>
 
                             {classes.map((cls, i) => <>
-                                {console.log(cls[i].attendance_name)}
+                                {/* {console.log(cls[i].attendance_name)} */}
                                 <option value={cls[i].attendance_id}> {cls[i].attendance_name} </option>
 
-                                
+
                             </>
                             )}
 

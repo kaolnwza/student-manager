@@ -21,7 +21,7 @@ const Subject = ({ course }) => {
     // console.log(router.query.courseid);
     return (<>
         <Row className='h-75 mx-5 justify-content-around' style={{
-            background: `linear-gradient(180deg, transparent 20%, #f6eeea 20%)`,
+            background: `linear-gradient(180deg, transparent 30%, #f6eeea 30%)`,
         }}>
             <Col lg={4} className='d-flex justify-content-end align-items-start'>
                 <Image src="/Fresh Folk - Teaching.png" alt="me" width="200%" height="280%" />
@@ -56,7 +56,7 @@ const Subject = ({ course }) => {
                                                         src="https://cdn.lordicon.com/nocovwne.json"
                                                         style={{ height: '3rem', width: '3rem' }}
                                                     ></lord-icon>
-                                                    <p>Student Score</p>
+                                                    <p style={{ lineHeight: '1rem' }}>Student Score</p>
                                                 </a>
                                             </div>
                                         </Link>
@@ -72,7 +72,7 @@ const Subject = ({ course }) => {
                                                         src="https://cdn.lordicon.com/tvyxmjyo.json"
                                                         style={{ height: '3rem', width: '3rem' }}
                                                     ></lord-icon>
-                                                    <p>Student attendance</p>
+                                                    <p style={{ lineHeight: '1rem' }}>Student attendance</p>
                                                 </a>
                                             </div>
                                         </Link>
