@@ -26,18 +26,22 @@ module.exports.AddStudentScore = async (req) => {
 
 
 module.exports.AddClassScore = async (req) => {
-
     const validation = await score_vld.AddClassScore(req)
     if (validation.err != 200) {
         return ErrorHandling(400, validation.msg)
     }
 
-    const resp = await score_queries.AddClassScoreQueries(req)
-    if (resp.err != 201) {
-        return ErrorHandling(500, resp.msg)
+    const class_resp = await score_queries.AddClassScoreQueries(req)
+    if (class_resp.err != 201) {
+        return ErrorHandling(500, class_resp.msg)
     }
 
-    return ErrorHandling(201, resp)
+    const std_resp = await score_queries.AddClassStudentScoreQueries(req, class_resp.msg.rows[0].score_id)
+    if (std_resp.err != 201) {
+        return ErrorHandling(500, std_resp.msg)
+    }
+
+    return ErrorHandling(201, std_resp)
 
 
 
@@ -50,9 +54,9 @@ module.exports.GetScoreByClassId = async (class_id) => {
         return ErrorHandling(500, resp.msg)
     }
 
-    // var filtered_by_week = await FilterScoreByWeek(resp.msg.rows)
+    var filtered_by_week = await FilterScoreByWeek(resp.msg.rows)
 
-    return ErrorHandling(200, resp.msg.rows)
+    return ErrorHandling(200, filtered_by_week)
 
 }
 

@@ -1,5 +1,29 @@
 const db = require("../db/attendance-queries")
 const ErrorHandling = require("./error")
+const attendance_vld = require("../validates/attendance-validates")
+
+const AddClassAttendance = async (req) => {
+
+    const validation = await attendance_vld.AddClassAttendance(req)
+    if (validation.err != 200) {
+        return ErrorHandling(400, validation.msg)
+    }
+
+    const class_resp = await db.AddClassAttendanceQueries(req)
+    if (class_resp.err != 201) {
+        return ErrorHandling(500, class_resp.msg)
+    }
+
+    const std_resp = await db.AddClassStudentAttendanceQueries(req, class_resp.msg.rows[0].attendance_id)
+    if (std_resp.err != 201) {
+        return ErrorHandling(500, std_resp.msg)
+    }
+
+    return ErrorHandling(201, std_resp)
+
+
+
+}
 
 const GetAttendanceByClassId = async (class_id) => {
 
@@ -38,4 +62,4 @@ const FilterAttendanceByWeek = async (resp_arr) => {
 
 }
 
-module.exports = { GetAttendanceByClassId }
+module.exports = { GetAttendanceByClassId, AddClassAttendance }

@@ -1,7 +1,39 @@
 const pool = require("../db/db")
 const ErrorHandling = require("../services/error")
 
+const AddClassAttendanceQueries = async (req) => {
 
+    try {
+        const column = `(class_id, attendance_name)`
+        const values = [req.class_id, req.attendance_name]
+        const attendance_stm = await pool.query(`
+        INSERT INTO class_attendance ${column} 
+        VALUES ($1, $2) 
+        RETURNING attendance_id`, values)
+
+        return ErrorHandling(201, attendance_stm)
+    } catch (error) {
+        return ErrorHandling(500, error)
+    }
+
+}
+
+const AddClassStudentAttendanceQueries = async (req, attendance_id) => {
+
+    try {
+
+        const student_stm = await pool.query(`
+        INSERT INTO student_attendance (attendance_id, student_id, attendance_status)  
+        SELECT $1, student_id, 'notcome' 
+        FROM class_student 
+        WHERE class_student.class_id = $2`, [attendance_id, req.class_id])
+
+        return ErrorHandling(201, student_stm)
+    } catch (error) {
+        return ErrorHandling(500, error)
+    }
+
+}
 
 const GetAttendanceByClassIdQueries = async (class_id) => {
     try {
@@ -13,7 +45,7 @@ const GetAttendanceByClassIdQueries = async (class_id) => {
         JOIN student_attendance AS sa ON sa.attendance_id = ca.attendance_id
         JOIN student AS s ON s.student_id = sa.student_id
         WHERE c.class_id = $1
-        ORDER BY ca.attendance_id
+        ORDER BY ca.attendance_id, s.student_id
        `
 
         const query_stm = await pool.query(stm, [class_id])
@@ -30,5 +62,5 @@ const GetAttendanceByClassIdQueries = async (class_id) => {
 
 
 
-module.exports = { GetAttendanceByClassIdQueries }
+module.exports = { GetAttendanceByClassIdQueries, AddClassAttendanceQueries, AddClassStudentAttendanceQueries }
 

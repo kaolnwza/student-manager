@@ -16,7 +16,6 @@ const GetAllQueries = async (table) => {
 const GetByAnyQueries = async (table, column, values) => {
     try {
         const query_stm = await pool.query(`SELECT * FROM ${table} WHERE ${column} = $1`, [values])
-        console.log(query_stm)
         return ErrorHandling(200, query_stm)
     } catch (error) {
         return ErrorHandling(500, error)
