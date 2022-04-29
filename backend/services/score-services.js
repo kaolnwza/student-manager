@@ -50,9 +50,9 @@ module.exports.GetScoreByClassId = async (class_id) => {
         return ErrorHandling(500, resp.msg)
     }
 
-    var filtered_by_week = await FilterScoreByWeek(resp.msg.rows)
+    // var filtered_by_week = await FilterScoreByWeek(resp.msg.rows)
 
-    return ErrorHandling(200, filtered_by_week)
+    return ErrorHandling(200, resp.msg.rows)
 
 }
 

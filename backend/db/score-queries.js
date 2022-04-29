@@ -29,10 +29,8 @@ module.exports.AddClassScoreQueries = async (req) => {
 module.exports.GetScoreByClassIdQueries = async (class_id) => {
     try {
         const stm = `SELECT s.student_id, s.student_firstname, s.student_lastname, 
-        cs.score_name, 
-        cs.max_score, cs.unit_score "max_unit_score", 
+        cs.score_name, cs.max_score, cs.unit_score "max_unit_score", 
         sc.score_point "student_score", cs.unit_score / cs.max_score * sc.score_point "student_unit_score"
-     
         FROM class AS c
         JOIN class_score AS cs ON c.class_id = cs.class_id
         JOIN student_score AS sc ON sc.score_id = cs.score_id

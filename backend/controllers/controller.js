@@ -9,7 +9,7 @@ const attendance_controller = require("./attendance-controller")
 const auth_controller = require("./auth-controller")
 const { AuthenticationToken } = require("../middleware/auth-middleware")
 
-router.use("/student", AuthenticationToken(["admin", 'teacher', 'student']), student_controller)
+router.use("/student", student_controller)
 
 router.use("/class", AuthenticationToken(["admin", 'teacher']), class_controller)
 
