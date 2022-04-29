@@ -23,7 +23,6 @@ const FilterAttendanceByWeek = async (resp_arr) => {
 
     resp_arr.forEach((x, index) => {
         if (x.attendance_id != temp) {
-            console.log(index, "incase", x.attendance_id == temp)
             filter_by_week.push(arr)
             arr = []
             temp = x.attendance_id

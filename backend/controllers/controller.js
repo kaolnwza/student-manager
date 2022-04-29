@@ -13,7 +13,7 @@ router.use("/student", AuthenticationToken(["admin", 'teacher', 'student']), stu
 
 router.use("/class", AuthenticationToken(["admin", 'teacher']), class_controller)
 
-router.use("/score", AuthenticationToken(["admin", 'teacher']), score_controller)
+router.use("/score", score_controller)
 
 router.use("/util", AuthenticationToken(["admin", 'teacher']), get_controller)
 
