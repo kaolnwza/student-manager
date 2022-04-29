@@ -112,6 +112,7 @@ const score = ({ score }) => {
                                 <th>Last Name</th>
                                 <th>Max Score ({cls[i].max_score})</th>
                                 <th>Max Unit Score ({cls[i].max_unit_score})</th>
+                                
 
 
 

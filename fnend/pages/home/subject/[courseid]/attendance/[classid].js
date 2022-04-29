@@ -106,6 +106,8 @@ const attendance = ({ classes }) => {
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Status</th>
+                                        <th>Note</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -171,6 +173,7 @@ const attendance = ({ classes }) => {
 
                                                     </ButtonGroup>}
                                             </td>
+                                            <td>Get FUCKED</td>
                                         </tr>)}
                                 </tbody>
                             </Table>
