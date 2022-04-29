@@ -82,43 +82,6 @@ const Subject = ({ course }) => {
                             </Col>)}
                     </Row>
 
-                    {/* <Row className=' mb-3' style={{
-                        marginTop: '5rem'
-                    }}>
-                        <Col>
-                            <Link href={{ pathname: `/home/subject/${router.query.courseid}/score/${course[0].class_id}` }}>
-
-                                <div>
-                                    <a class="btn">
-                                        <lord-icon
-                                            target="a.btn"
-                                            trigger="morph"
-                                            src="https://cdn.lordicon.com/nocovwne.json"
-                                            style={{ height: '3rem', width: '3rem' }}
-                                        ></lord-icon>
-                                        <p>Student Score</p>
-                                    </a>
-                                </div>
-                            </Link>
-                        </Col>
-                        <Col>
-                            <Link href={{ pathname: `/home/subject/${router.query.courseid}/attendance/${course[0].class_id}` }}>
-
-                                <div>
-                                    <a class="btn">
-                                        <lord-icon
-                                            target="a.btn"
-                                            trigger="morph"
-                                            src="https://cdn.lordicon.com/tvyxmjyo.json"
-                                            style={{ height: '3rem', width: '3rem' }}
-                                        ></lord-icon>
-                                        <p>Student attendance</p>
-                                    </a>
-                                </div>
-                            </Link>
-                        </Col>
-
-                    </Row> */}
                 </Row>
 
             </Col>

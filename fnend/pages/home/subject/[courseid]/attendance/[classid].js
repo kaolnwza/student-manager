@@ -12,6 +12,7 @@ export const getServerSideProps = async (ctx) => {
         }
     }
 }
+
 const attendance = ({ classes }) => {
     const [key, setKey] = useState(0);
     const [show, setShow] = useState(false);
@@ -63,7 +64,7 @@ const attendance = ({ classes }) => {
     const EditStudent = (status, student) => {
         const data = {
             class_id: rounter.query.classid,
-            attendance_id: attendanceId,
+            attendance_id: parseInt(attendanceId),
             student_id: student,
             attendance_status: status,
         }
