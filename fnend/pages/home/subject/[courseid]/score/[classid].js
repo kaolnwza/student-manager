@@ -88,12 +88,28 @@ export const getServerSideProps = async (ctx) => {
 }
 
 const score = ({ score }) => {
-    const router = useRouter()
-    const { classid } = router.query
+    const rounter = useRouter()
+    const { classid } = rounter.query
+    const [show, setShow] = useState(false);
     const [key, setKey] = useState(0);
+    const [form, setForm] = useState('');
 
-    return (<Container>
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    
+
+    return (<Container className="text-center">
         {console.log(score)}
+        <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
+            <lord-icon
+                target="a.btn"
+                src="https://cdn.lordicon.com/kpsnbsyj.json"
+                trigger="morph"
+                style={{ height: '3rem', width: '3rem' }}
+            >
+            </lord-icon>
+            <p>Add Assignment</p>
+        </a>
         <Tabs
             activeKey={key}
             onSelect={(k) => setKey(k)}
@@ -112,7 +128,7 @@ const score = ({ score }) => {
                                 <th>Last Name</th>
                                 <th>Max Score ({cls[i].max_score})</th>
                                 <th>Max Unit Score ({cls[i].max_unit_score})</th>
-                                
+
 
 
 
@@ -121,7 +137,7 @@ const score = ({ score }) => {
                         </thead>
                         <tbody>
                             {cls.map((person, j) =>
-                                <tr>
+                                <tr key={j}>
                                     <td>{person.student_id} </td>
                                     <td>{person.student_firstname}</td>
                                     <td>{person.student_lastname}</td>
@@ -134,6 +150,60 @@ const score = ({ score }) => {
                     </Table>
                 </Tab>)}
         </Tabs>
+
+        <Modal
+            show={show}
+            onHide={handleClose}
+            backdrop="static"
+            keyboard={false}
+            style={{ fontFamily: 'roboto slab' }}
+        >
+            <Modal.Header closeButton>
+                <Modal.Title>Add Assignment</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <InputGroup className="mb-3">
+                    <FormControl
+                        placeholder="Assignment"
+                        value={form}
+                        onChange={(e) => setForm(e.target.value)}
+                    />
+                    <Button className="btn py-0  border-success" variant="" onClick={() => {
+                        setTimeout(() => {
+                            addAssignment()
+                        }, 1500)
+                    }}>
+                        Add
+                        <lord-icon
+                            src="https://cdn.lordicon.com/mecwbjnp.json"
+                            target="Button.btn"
+                            trigger="click"
+                            style={{ height: '2rem', width: '2rem' }}>
+                        </lord-icon>
+                    </Button>
+                </InputGroup>
+                Name :{form} Class_id :{rounter.query.classid}
+
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="light" className="py-1 btn" onClick={() => {
+                    setTimeout(() => {
+                        setShow(false)
+                    }, 50)
+                }}>
+                    Cancel
+                    <lord-icon
+                        src="https://cdn.lordicon.com/eflfmgmj.json"
+                        trigger="click"
+                        target="Button.btn"
+                        colors="primary:#000"
+                        state="hover-1"
+                        style={{ height: '1.5rem', width: '1.5rem' }}>
+                    </lord-icon>
+                </Button>
+
+            </Modal.Footer>
+        </Modal>
     </Container>);
 }
 

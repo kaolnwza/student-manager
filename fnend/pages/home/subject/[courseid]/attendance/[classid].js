@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/router'
 import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Form, ButtonGroup, ToggleButton } from 'react-bootstrap';
+// import { stringifyQuery } from "next/dist/server/server-route-utils";
 
 export const getServerSideProps = async (ctx) => {
     const resClass = await fetch('http://localhost:3000/attendance/class/' + ctx.query.classid)
@@ -8,20 +9,27 @@ export const getServerSideProps = async (ctx) => {
     console.log(classes);
     return {
         props: {
-            classes: classes
+            cls: classes
         }
     }
 }
 
-const attendance = ({ classes }) => {
+const attendance = ({ cls = [] }) => {
+    const [classes, setClasses] = useState(cls);
+
     const [key, setKey] = useState(0);
     const [show, setShow] = useState(false);
     const [form, setForm] = useState('');
     const [expandedId, setExpandedId] = useState(-1);
+    const [Note, setNote] = useState('');
+
     const [attendanceId, setAttendanceId] = useState(0)
+    // const [WeeekIndex, setWeekIndex] = useState(0)
+
     const handleExpandClick = (i) => {
         setExpandedId(expandedId === i ? -1 : i);
     };
+
     const status = [
         {
             name: <lord-icon
@@ -52,26 +60,60 @@ const attendance = ({ classes }) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const addAttendance = () => {
+    const addAttendance = async () => {
         const data = {
             class_id: rounter.query.classid,
             attendance_name: form
         }
+
+        const resAttendance = await fetch('http://localhost:3000/attendance/addclass', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const response = await resAttendance.json()
         setShow(false)
         setForm('')
-        console.log(data)
-    };
-    const EditStudent = (status, student) => {
-        const data = {
+        console.log({
             class_id: rounter.query.classid,
+            attendance_name: form
+        })
+        console.log(response);
+    };
+
+
+    const EditStudent = async (status, student) => {
+        const data = {
             attendance_id: parseInt(attendanceId),
             student_id: student,
             attendance_status: status,
+            attendance_note: Note
+
+        }
+        const resEdit = await fetch('http://localhost:3000/attendance/update_student', {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const response = await resEdit.json()
+        console.log(response);
+        setNote('')
+    }
+
+    useEffect(() => {
+        const fetchMyAPI = async () => {
+            const resClass = await fetch('http://localhost:3000/attendance/class/' + rounter.query.classid)
+            const classes = await resClass.json()
+            setClasses(classes)
         }
 
-        console.log(data);
+        fetchMyAPI()
+    }, [classes])
 
-    }
 
 
     return (
@@ -97,7 +139,7 @@ const attendance = ({ classes }) => {
 
                     {classes.map((cls, i) =>
 
-                        <Tab key={i} eventKey={i} title={`${cls[i].attendance_name}`} style={{ height: '40vh', overflowY: 'scroll' }}>
+                        <Tab key={i} eventKey={i} title={`${cls[0].attendance_name}`} style={{ height: '40vh', overflowY: 'scroll' }} >
 
                             <Table borderless hover className="text-center" >
                                 <thead>
@@ -116,6 +158,7 @@ const attendance = ({ classes }) => {
                                             <td>{person.student_id} </td>
                                             <td>{person.student_firstname}</td>
                                             <td>{person.student_lastname}</td>
+                                            {/* {person.attendance_status = 'come'} */}
                                             <td className="w-25 p-0 m-0">
                                                 {expandedId !== j ?
                                                     person.attendance_status == 'come' ?
@@ -163,6 +206,7 @@ const attendance = ({ classes }) => {
                                                                 }}
                                                                 onClick={(e) => {
                                                                     setAttendanceId(person.attendance_id)
+
                                                                 }}
                                                             >
                                                                 {radio.name}
@@ -171,9 +215,21 @@ const attendance = ({ classes }) => {
                                                             </ToggleButton>
                                                         ))}
 
-                                                    </ButtonGroup>}
+                                                    </ButtonGroup>
+                                                }
                                             </td>
-                                            <td>Get FUCKED</td>
+                                            <td className="w-25 p-0 ">
+                                                {expandedId !== j ?
+                                                    person.attendance_note :
+                                                    <FormControl
+                                                        className="w-50 d-inline"
+                                                        placeholder="Note"
+                                                        defaultValue={person.attendance_note}
+                                                        value={Note}
+                                                        onChange={(e) => setNote(e.target.value)}
+                                                    />}
+                                            </td>
+
                                         </tr>)}
                                 </tbody>
                             </Table>

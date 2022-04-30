@@ -72,7 +72,7 @@ const Home = ({ subjects }) => {
         data-swiper-parallax="-55%"
       ></div>
       {subjects.map((sub, index) => (
-        <SwiperSlide>
+        <SwiperSlide key={index}>
           <Row className="h-100">
             <Col lg={5} style={{
               display: 'flex',
