@@ -21,6 +21,19 @@ const AddClassAttendance = async (req) => {
 
     return ErrorHandling(201, std_resp)
 
+}
+
+const UpdateStudentAttendance = async (req) => {
+
+
+    const resp = await db.UpdateStudentAttendanceQueries(req)
+    if (resp.err != 200) {
+        return ErrorHandling(500, resp.msg)
+    }
+
+
+    return ErrorHandling(201, resp.msg)
+
 
 
 }
@@ -62,4 +75,4 @@ const FilterAttendanceByWeek = async (resp_arr) => {
 
 }
 
-module.exports = { GetAttendanceByClassId, AddClassAttendance }
+module.exports = { GetAttendanceByClassId, AddClassAttendance, UpdateStudentAttendance }

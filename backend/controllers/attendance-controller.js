@@ -8,6 +8,13 @@ router.post("/addclass", async (req, res) => {
     res.status(resp.err).send(resp.msg)
 })
 
+router.put("/update_student", async (req, res) => {
+    const resp = await services.UpdateStudentAttendance(req.body)
+
+
+    res.status(resp.err).send(resp.msg)
+})
+
 router.get("/class/:class_id", async (req, res) => {
     const class_id = req.params["class_id"]
 

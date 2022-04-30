@@ -35,6 +35,21 @@ const AddClassStudentAttendanceQueries = async (req, attendance_id) => {
 
 }
 
+const UpdateStudentAttendanceQueries = async (req) => {
+    try {
+        const query_stm = await pool.query(`
+        UPDATE student_attendance 
+        SET attendance_status = $1, attendance_note = $2 
+        WHERE attendance_id = $3
+        AND student_id = $4`,
+            [req.attendance_status, req.attendance_note, req.attendance_id, req.student_id])
+
+        return ErrorHandling(200, query_stm)
+    } catch (error) {
+        return ErrorHandling(500, error)
+    }
+}
+
 const GetAttendanceByClassIdQueries = async (class_id) => {
     try {
         const stm = `SELECT ca.attendance_id, ca.attendance_name, 
@@ -62,5 +77,5 @@ const GetAttendanceByClassIdQueries = async (class_id) => {
 
 
 
-module.exports = { GetAttendanceByClassIdQueries, AddClassAttendanceQueries, AddClassStudentAttendanceQueries }
+module.exports = { GetAttendanceByClassIdQueries, AddClassAttendanceQueries, AddClassStudentAttendanceQueries, UpdateStudentAttendanceQueries }
 

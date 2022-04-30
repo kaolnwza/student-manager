@@ -23,6 +23,18 @@ module.exports.AddStudentScore = async (req) => {
 
 
 }
+module.exports.UpdateStudentScore = async (req) => {
+
+
+    const resp = await score_queries.UpdateStudentScoreQueries(req)
+    if (resp.err != 200) {
+        return ErrorHandling(500, resp.msg)
+    }
+
+    return ErrorHandling(200, resp)
+
+
+}
 
 
 module.exports.AddClassScore = async (req) => {

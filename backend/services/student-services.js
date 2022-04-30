@@ -45,4 +45,4 @@ const GetStudentAttendanceByClassId = async (class_id, student_id) => {
 
 }
 
-module.exports = { AddStudent, GetStudentAttendanceByClassId }
+module.exports = { AddStudent, GetStudentAttendanceByClassId, GetStudentScoreByClassId }

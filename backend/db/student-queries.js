@@ -11,9 +11,9 @@ const AddStudentQueries = async (req) => {
     } catch (error) {
         return ErrorHandling(500, error)
     }
-
-
 }
+
+
 
 const GetStudentScoreByClassIdQueries = async (class_id, student_id) => {
     try {

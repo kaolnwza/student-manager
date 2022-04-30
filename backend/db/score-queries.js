@@ -31,6 +31,22 @@ module.exports.AddClassScoreQueries = async (req) => {
 
 }
 
+module.exports.UpdateStudentScoreQueries = async (req) => {
+    try {
+        const query_stm = await pool.query(`
+        UPDATE student_score 
+        SET score_point = $1, score_note = $4
+        WHERE score_id = $2
+        AND student_id = $3
+        AND $1 <= (SELECT max_score FROM class_score WHERE score_id = $2) `,
+            [req.student_score, req.score_id, req.student_id, req.score_note])
+
+        return ErrorHandling(200, query_stm)
+    } catch (error) {
+        return ErrorHandling(500, error)
+    }
+}
+
 module.exports.AddClassStudentScoreQueries = async (req, score_id) => {
 
     try {
