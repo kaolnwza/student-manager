@@ -54,7 +54,7 @@ const GetAttendanceByClassIdQueries = async (class_id) => {
     try {
         const stm = `SELECT ca.attendance_id, ca.attendance_name, 
         sa.student_id, s.student_firstname, s.student_lastname, 
-        sa.attendance_status
+        sa.attendance_status, sa.attendance_note 
         FROM class AS c 
         JOIN class_attendance AS ca ON c.class_id = ca.class_id 
         JOIN student_attendance AS sa ON sa.attendance_id = ca.attendance_id
