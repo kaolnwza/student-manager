@@ -13,7 +13,7 @@ import { Parallax, Pagination, Navigation } from "swiper";
 import Link from "next/link";
 
 export const getServerSideProps = async () => {
-  const res = await fetch('http://localhost:3001/util/subject/getall')
+  const res = await fetch('http://localhost:3000/util/subject/getall')
   const json = await res.json()
   return { props: { subjects: json } }
 }
