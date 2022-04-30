@@ -11,11 +11,11 @@ const { AuthenticationToken } = require("../middleware/auth-middleware")
 
 router.use("/student", student_controller)
 
-router.use("/class", AuthenticationToken(["admin", 'teacher']), class_controller)
+router.use("/class", class_controller)
 
 router.use("/score", score_controller)
 
-router.use("/util", AuthenticationToken(["admin", 'teacher']), get_controller)
+router.use("/util", get_controller)
 
 router.use("/subject", subject_controller)
 

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Form, ButtonGroup, ToggleButton } from 'react-bootstrap';
 
 export const getServerSideProps = async (ctx) => {
-    const resClass = await fetch('http://localhost:3001/attendance/class/' + ctx.query.classid)
+    const resClass = await fetch('http://localhost:3000/attendance/class/' + ctx.query.classid)
     const classes = await resClass.json()
     console.log(classes);
     return {

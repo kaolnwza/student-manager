@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 export const getServerSideProps = async (ctx) => {
-    const resSubDetail = await fetch('http://localhost:3001/subject/detail/' + ctx.query.courseid)
+    const resSubDetail = await fetch('http://localhost:3000/subject/detail/' + ctx.query.courseid)
     const subjectDetail = await resSubDetail.json()
     // console.log(subjectDetail);
     return {

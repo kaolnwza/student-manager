@@ -8,7 +8,7 @@ app.options('*', cors())
 
 const router = require("./controllers/controller")
 const corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: 'http://localhost:8080',
   credentials: true,
 };
 app.use(cors(corsOptions));
