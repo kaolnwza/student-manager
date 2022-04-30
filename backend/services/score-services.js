@@ -75,6 +75,9 @@ module.exports.GetScoreByClassId = async (class_id) => {
 
 const FilterScoreByWeek = async (resp_arr) => {
     //format by attendance_id
+    if (resp_arr.length == 0) {
+        return {}
+    }
     var temp = resp_arr[0].score_id
     var filter_by_week = []
     var arr = []

@@ -54,6 +54,10 @@ const GetAttendanceByClassId = async (class_id) => {
 
 const FilterAttendanceByWeek = async (resp_arr) => {
     //format by attendance_id
+    if (resp_arr.length == 0) {
+        return {}
+    }
+
     var temp = resp_arr[0].attendance_id
     var filter_by_week = []
     var arr = []
