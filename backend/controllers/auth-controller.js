@@ -22,8 +22,8 @@ router.get("/test", async (req, res) => {
     res.json("kuy prayuth")
 })
 
-router.get("/role", AuthenticationToken(['student', 'teacher']), async (req, res) => {
-    const role = services.GetPayloadRole(req.cookies.token)
+router.get("/role/:token", AuthenticationToken(['student', 'teacher']), async (req, res) => {
+    const role = services.GetPayloadRole(req.params['token'])
 
     res.json(role)
 })
