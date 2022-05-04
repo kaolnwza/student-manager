@@ -4,7 +4,14 @@ import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Fo
 // import { stringifyQuery } from "next/dist/server/server-route-utils";
 
 export const getServerSideProps = async (ctx) => {
-    const resClass = await fetch('http://localhost:3000/attendance/class/' + ctx.query.classid)
+    const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + ctx.query.classid, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${ctx.req.cookies.token}`
+        }
+    })
     const classes = await resClass.json()
 
     return {
@@ -68,24 +75,26 @@ const attendance = ({ cls }) => {
             attendance_name: form
         }
 
-        const resAttendance = await fetch('http://localhost:3000/attendance/addclass', {
+        await fetch(`http://${process.env.ip}:3000/attendance/addclass`, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `bearer ${window.localStorage.getItem('token')}`
             }
-        })
+        }).then((res) => res.json())
+            .then((data) => {
+                console.log(data)
+            })
 
-        const response = await resAttendance.json()
-
-        setShow(false)
         setForm('')
-        console.log({
-            class_id: rounter.query.classid,
-            attendance_name: form
-        })
-        console.log(response);
+        // console.log({
+        //     class_id: rounter.query.classid,
+        //     attendance_name: form
+        // })
+        // console.log(response);
+        setRefresh(refresh + 1)
+
     };
 
 
@@ -97,7 +106,7 @@ const attendance = ({ cls }) => {
             attendance_note: Note
 
         }
-        const resEdit = await fetch('http://localhost:3000/attendance/update_student', {
+        const resEdit = await fetch(`http://${process.env.ip}:3000/attendance/update_student`, {
             method: 'PUT',
             body: JSON.stringify(data),
             headers: {
@@ -107,13 +116,12 @@ const attendance = ({ cls }) => {
         })
         const response = await resEdit.json()
         console.log(response);
-        setNote('')
-        setRefresh(refresh - 1)
+        setRefresh(refresh + 1)
     }
 
     useEffect(() => {
         const fetchMyAPI = async () => {
-            const resClass = await fetch('http://localhost:3000/attendance/class/' + rounter.query.classid)
+            const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + rounter.query.classid)
             const classes = await resClass.json()
             setClasses(classes)
             // console.log();
@@ -174,7 +182,10 @@ const attendance = ({ cls }) => {
                                                             src="https://cdn.lordicon.com/hjeefwhm.json"
                                                             trigger="morph"
                                                             style={{ cursor: 'pointer' }}
-                                                            onClick={() => handleExpandClick(j)}
+                                                            onClick={() => {
+                                                                setNote(person.attendance_note)
+                                                                handleExpandClick(j)
+                                                            }}
                                                         >
                                                         </lord-icon>
                                                         :
@@ -182,7 +193,10 @@ const attendance = ({ cls }) => {
                                                             <lord-icon
                                                                 src="https://cdn.lordicon.com/vfzqittk.json"
                                                                 trigger="morph"
-                                                                onClick={() => handleExpandClick(j)}
+                                                                onClick={() => {
+                                                                    setNote(person.attendance_note)
+                                                                    handleExpandClick(j)
+                                                                }}
                                                                 style={{ cursor: 'pointer' }}
 
                                                             >
@@ -192,7 +206,10 @@ const attendance = ({ cls }) => {
                                                                 src="https://cdn.lordicon.com/abgtphux.json"
                                                                 trigger="morph"
                                                                 style={{ cursor: 'pointer' }}
-                                                                onClick={() => handleExpandClick(j)}
+                                                                onClick={() => {
+                                                                    setNote(person.attendance_note)
+                                                                    handleExpandClick(j)
+                                                                }}
                                                             >
                                                             </lord-icon>
                                                         )
@@ -214,7 +231,6 @@ const attendance = ({ cls }) => {
                                                                 }}
                                                                 onClick={(e) => {
                                                                     setAttendanceId(person.attendance_id)
-
                                                                 }}
                                                             >
                                                                 {radio.name}
@@ -233,7 +249,6 @@ const attendance = ({ cls }) => {
                                                         className="w-50 d-inline"
                                                         placeholder="Note"
                                                         defaultValue={person.attendance_note}
-                                                        value={Note}
                                                         onChange={(e) => setNote(e.target.value)}
                                                     />
                                                 }
@@ -269,12 +284,14 @@ const attendance = ({ cls }) => {
                             onChange={(e) => setForm(e.target.value)}
                         />
                         <Button className="btn py-0  border-success" variant="" onClick={() => {
-
+                            addAttendance()
                             setTimeout(() => {
-                                addAttendance()
-                                setRefresh(refresh + 1)
 
-                            }, 1500)
+                                setRefresh(refresh + 1)
+                                setShow(false)
+
+                            }, 2000)
+
                         }}>
                             Add
                             <lord-icon
