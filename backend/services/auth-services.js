@@ -64,7 +64,7 @@ const Login = async (req) => {
 
 const GetPayloadRole = (token) => {
     const role = jwt.decode(token)
-    return role.role
+    return role
 }
 
 module.exports = { CreateAccessToken, Login, GetPayloadRole }
