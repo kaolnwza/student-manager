@@ -5,7 +5,11 @@ import { useRouter } from 'next/router'
 export default function layout({ children }) {
   const router = useRouter()
   // console.log(router.route);
-  const [login, setLogin] = useState(true)
+  const [login, setLogin] = useState(false)
+  useEffect(() => {
+    setLogin(window.localStorage.getItem('token'))
+  }, [])
+
   return (
     <div className="container-fluid bg-brown " style={{ fontFamily: 'Roboto Slab' }} >
       <div className="row pl-5 position-fixed ">
@@ -46,29 +50,30 @@ export default function layout({ children }) {
               </li>
               {login ? <li className="pl-2 my-2 ">
 
-                {/* <Link href='/login'> */}
-                <lord-icon
-                  src="https://cdn.lordicon.com/iiueiwdd.json"
-                  trigger="morph"
-                  style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
-                  onClick={() => setLogin(login => !login)}
-                >
-                </lord-icon>
-                <article>Log Out</article>
-                {/* </Link> */}
+                <Link href='/'>
+                  <div>
+                    <lord-icon
+                      src="https://cdn.lordicon.com/iiueiwdd.json"
+                      trigger="morph"
+                      style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
+                    >
+                    </lord-icon>
+                    <article>Log Out</article>
+                  </div>
+                </Link>
               </li> : <li className="pl-2 my-2 ">
-                {/* <Link href='/login'> */}
-                <lord-icon
-                  src="https://cdn.lordicon.com/gkditgni.json"
-                  trigger="morph"
-                  style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
-                  onClick={() => setLogin(login => !login)}
+                <Link href='/'>
+                  <div>
+                    <lord-icon
+                      src="https://cdn.lordicon.com/gkditgni.json"
+                      trigger="morph"
+                      style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
 
-                >
-                </lord-icon>
-                <article>Log In</article>
-
-                {/* </Link> */}
+                    >
+                    </lord-icon>
+                    <article>Log In</article>
+                  </div>
+                </Link>
               </li>}
 
 
