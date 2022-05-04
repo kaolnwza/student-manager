@@ -6,7 +6,9 @@ const nextConfig = {
 
 module.exports = {
   env: {
-    ip: '107.21.129.37',
+    // ip: '107.21.129.37',
+    ip: 'localhost',
+
 
   },
   nextConfig
