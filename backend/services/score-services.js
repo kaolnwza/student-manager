@@ -39,9 +39,9 @@ module.exports.UpdateStudentScore = async (req) => {
 
 module.exports.AddClassScore = async (req) => {
     const validation = await score_vld.AddClassScore(req)
-    if (validation.err != 200) {
-        return ErrorHandling(400, validation.msg)
-    }
+    // if (validation.err != 200) {
+    //     return ErrorHandling(400, validation.msg)
+    // }
 
     const class_resp = await score_queries.AddClassScoreQueries(req)
     if (class_resp.err != 201) {

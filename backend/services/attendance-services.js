@@ -4,10 +4,10 @@ const attendance_vld = require("../validates/attendance-validates")
 
 const AddClassAttendance = async (req) => {
 
-    const validation = await attendance_vld.AddClassAttendance(req)
-    if (validation.err != 200) {
-        return ErrorHandling(400, validation.msg)
-    }
+    // const validation = await attendance_vld.AddClassAttendance(req)
+    // if (validation.err != 200) {
+    //     return ErrorHandling(400, validation.msg)
+    // }
 
     const class_resp = await db.AddClassAttendanceQueries(req)
     if (class_resp.err != 201) {

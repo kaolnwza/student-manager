@@ -6,7 +6,7 @@ import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Fo
 export const getServerSideProps = async (ctx) => {
     const resClass = await fetch('http://localhost:3000/attendance/class/' + ctx.query.classid)
     const classes = await resClass.json()
-    console.log(classes);
+
     return {
         props: {
             cls: classes
@@ -14,8 +14,9 @@ export const getServerSideProps = async (ctx) => {
     }
 }
 
-const attendance = ({ cls = [] }) => {
+const attendance = ({ cls }) => {
     const [classes, setClasses] = useState(cls);
+    const [refresh, setRefresh] = useState(0);
 
     const [key, setKey] = useState(0);
     const [show, setShow] = useState(false);
@@ -24,6 +25,7 @@ const attendance = ({ cls = [] }) => {
     const [Note, setNote] = useState('');
 
     const [attendanceId, setAttendanceId] = useState(0)
+    const isEmpty = Object.keys(classes).length === 0;
     // const [WeeekIndex, setWeekIndex] = useState(0)
 
     const handleExpandClick = (i) => {
@@ -73,7 +75,10 @@ const attendance = ({ cls = [] }) => {
                 'Content-Type': 'application/json'
             }
         })
+
         const response = await resAttendance.json()
+        setRefresh(refresh + 1)
+
         setShow(false)
         setForm('')
         console.log({
@@ -112,31 +117,30 @@ const attendance = ({ cls = [] }) => {
         }
 
         fetchMyAPI()
-    }, [classes])
+    }, [refresh])
 
 
 
     return (
-        <div className="d-flex justify-content-center w-75 h-75">
 
-            <Container className="text-center">
-                <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
-                    <lord-icon
-                        target="a.btn"
-                        src="https://cdn.lordicon.com/auvicynv.json"
-                        trigger="morph"
-                        style={{ height: '3rem', width: '3rem' }}
-                    >
-                    </lord-icon>
-                    <p>Add Attendance</p>
-                </a>
+        <Container className="text-center">
+            <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
+                <lord-icon
+                    target="a.btn"
+                    src="https://cdn.lordicon.com/auvicynv.json"
+                    trigger="morph"
+                    style={{ height: '3rem', width: '3rem' }}
+                >
+                </lord-icon>
+                <p>Add Attendance</p>
+            </a>
+            {isEmpty ? null :
 
                 <Tabs
                     activeKey={key}
                     onSelect={(k) => setKey(k)}
                     className="mb-3 justify-content-center "
                 >
-
                     {classes.map((cls, i) =>
 
                         <Tab key={i} eventKey={i} title={`${cls[0].attendance_name}`} style={{ height: '40vh', overflowY: 'scroll' }} >
@@ -227,15 +231,17 @@ const attendance = ({ cls = [] }) => {
                                                         defaultValue={person.attendance_note}
                                                         value={Note}
                                                         onChange={(e) => setNote(e.target.value)}
-                                                    />}
+                                                    />
+                                                    }
                                             </td>
 
                                         </tr>)}
                                 </tbody>
                             </Table>
-                        </Tab>)}
+                        </Tab>)
+                    }
                 </Tabs>
-            </Container>
+            }
 
             {/* Add Modal */}
             <Modal
@@ -249,7 +255,10 @@ const attendance = ({ cls = [] }) => {
                     <Modal.Title>Add Attendance</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <Form.Text>Name</Form.Text>
+
                     <InputGroup className="mb-3">
+
                         <FormControl
                             placeholder="Attendance"
                             value={form}
@@ -292,7 +301,7 @@ const attendance = ({ cls = [] }) => {
                 </Modal.Footer>
             </Modal>
 
-        </div >
+        </Container>
 
     );
 }
