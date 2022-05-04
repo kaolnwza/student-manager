@@ -28,7 +28,6 @@ const Navigate = () => {
         
       "
         >
-            {user ? 'true' : 'false'}
             <li className="pl-2 my-2 ">
                 <Link href='/home'>
                     <div>
