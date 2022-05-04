@@ -4,14 +4,16 @@ const services = require("../services/auth-services")
 const { AuthenticationToken } = require("../middleware/auth-middleware")
 
 router.post("/login", async (req, res) => {
-    resp = await services.Login(req.body)
+    console.log('isin')
+    console.log(req.body)
+    const resp = await services.Login(req.body)
 
     res.cookie('token', resp.msg)
 
     // console.log(req.cookies.token)
 
 
-
+    console.log(resp.msg)
     // console.log(req.headers.cookie.token)
     res.status(resp.err).json(resp.msg)
 })

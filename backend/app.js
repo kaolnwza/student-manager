@@ -5,13 +5,15 @@ const app = express()
 const port = 3000
 var cors = require('cors')
 
-app.options('*', cors())
-
-const router = require("./controllers/controller")
 const corsOptions = {
   origin: 'http://localhost:8080',
   credentials: true,
 };
+
+app.options('http://localhost:8080', cors())
+
+const router = require("./controllers/controller")
+
 app.use(cors(corsOptions));
 app.use(cookieParser())
 app.use(express.json())
