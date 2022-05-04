@@ -1,5 +1,6 @@
 
 const express = require('express')
+const cookieParser = require('cookie-parser')
 const app = express()
 const port = 3000
 var cors = require('cors')
@@ -12,9 +13,9 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use(cookieParser())
 app.use(express.json())
 app.use(router)
-
 
 
 app.listen(port, () => {

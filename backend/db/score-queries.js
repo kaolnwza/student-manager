@@ -32,6 +32,7 @@ module.exports.AddClassScoreQueries = async (req) => {
 }
 
 module.exports.UpdateStudentScoreQueries = async (req) => {
+    console.log(req)
     try {
         const query_stm = await pool.query(`
         UPDATE student_score 

@@ -1,14 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const services = require("../services/attendance-services")
+const { AuthenticationToken } = require("../middleware/auth-middleware")
 
-router.post("/addclass", async (req, res) => {
+router.post("/addclass", AuthenticationToken('teacher'), async (req, res) => {
     const resp = await services.AddClassAttendance(req.body)
 
     res.status(resp.err).send(resp.msg)
 })
 
-router.put("/update_student", async (req, res) => {
+router.put("/update_student", AuthenticationToken('teacher'), async (req, res) => {
     const resp = await services.UpdateStudentAttendance(req.body)
 
 
