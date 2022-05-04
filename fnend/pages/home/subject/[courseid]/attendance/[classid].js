@@ -87,7 +87,6 @@ const attendance = ({ cls }) => {
                 console.log(data)
             })
 
-        setShow(false)
         setForm('')
         // console.log({
         //     class_id: rounter.query.classid,
@@ -289,8 +288,9 @@ const attendance = ({ cls }) => {
                             setTimeout(() => {
 
                                 setRefresh(refresh + 1)
+                                setShow(false)
 
-                            }, 1500)
+                            }, 2000)
 
                         }}>
                             Add
