@@ -6,9 +6,9 @@ const { AuthenticationToken } = require("../middleware/auth-middleware")
 router.post("/login", async (req, res) => {
     resp = await services.Login(req.body)
 
-    // res.cookie('token', resp.msg)
+    res.cookie('token', resp.msg)
 
-    console.log(req.cookies.token)
+    // console.log(req.cookies.token)
 
 
 

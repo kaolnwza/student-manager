@@ -41,18 +41,23 @@ const getHashedPassword = async (username) => {
 }
 
 const Login = async (req) => {
-    const password_check = comparePassword(req.username)
+
+
+    const auth_info = await get_services.GetByAny('auth', 'username', req.username)
+    if (auth_info.msg == null) {
+        return ErrorHandling(400, "User not found")
+    }
+
+    const password_check = comparePassword(auth_info.msg.username)
     if (!password_check) {
         return ErrorHandling(403, 'Wrong password')
     }
-
-    const auth_info = await get_services.GetByAny('auth', 'username', req.username)
 
     const user = await get_services.GetByAny(auth_info.msg.auth_role, 'auth_id', auth_info.msg.auth_id)
 
     const token = CreateAccessToken(user.msg, auth_info.msg.auth_role)
 
-    console.log(jwt.decode(token).role)
+    // console.log(jwt.decode(token).role)
 
     return ErrorHandling(200, token)
 }
