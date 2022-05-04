@@ -7,7 +7,7 @@ import Link from 'next/link'
 export const getServerSideProps = async (ctx) => {
     const resSubDetail = await fetch(`http://${process.env.ip}:3000/subject/detail/` + ctx.query.courseid)
     const subjectDetail = await resSubDetail.json()
-    // console.log(subjectDetail);
+    console.log(ctx.query.courseid);
     return {
         props: {
             course: subjectDetail

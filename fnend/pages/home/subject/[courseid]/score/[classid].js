@@ -3,7 +3,14 @@ import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Fo
 import { useEffect, useState } from "react"
 
 export const getServerSideProps = async (ctx) => {
-    const resScore = await fetch('http://localhost:3000/score/class/' + ctx.query.classid)
+    const resScore = await fetch(`http://${process.env.ip}:3000/score/class/` + ctx.query.classid, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${ctx.req.cookies.token}`
+        }
+    })
     const score = await resScore.json()
 
     return {
@@ -30,6 +37,7 @@ const Assignment = ({ s }) => {
     const [Note, setNote] = useState('');
 
 
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -39,7 +47,14 @@ const Assignment = ({ s }) => {
 
     useEffect(() => {
         const fetchMyAPI = async () => {
-            const resScore = await fetch('http://localhost:3000/score/class/' + rounter.query.classid)
+            const resScore = await fetch(`http://${process.env.ip}:3000/score/class/` + rounter.query.classid, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                }
+            })
             const score = await resScore.json()
             setScore(score)
 
@@ -57,7 +72,7 @@ const Assignment = ({ s }) => {
             unit_score: parseInt(unit)
         }
 
-        const resAttendance = await fetch('http://localhost:3000/score/addclass', {
+        const resAttendance = await fetch(`http://${process.env.ip}:3000/score/addclass`, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -66,35 +81,39 @@ const Assignment = ({ s }) => {
             }
         })
         const response = await resAttendance.json()
-        setRefresh(refresh + 1)
-        setShow(false)
+
         setForm('')
         setMaxScore('')
         setUnit('')
         console.log(response);
     };
 
-    const editAssignment = async (score, id) => {
+    const editAssignment = async (score, id, max) => {
         const data = {
             score_id: score,
             student_id: id,
             student_score: assignment,
             score_note: Note
         }
+        if (assignment > max) {
+            alert('Score must less than Max Score')
+        } else {
+            const resAttendance = await fetch(`http://${process.env.ip}:3000/score/update_student`, {
+                method: 'PUT',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                }
+            })
+            const response = await resAttendance.json()
+            setRefresh(refresh - 1)
 
-        const resAttendance = await fetch('http://localhost:3000/score/update_student', {
-            method: 'PUT',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `bearer ${window.localStorage.getItem('token')}`
-            }
-        })
-        const response = await resAttendance.json()
-        setRefresh(refresh - 1)
+            console.log(data);
+            console.log(response);
+        }
 
-        console.log(data);
-        console.log(response);
+
     };
 
 
@@ -128,9 +147,9 @@ const Assignment = ({ s }) => {
                                         <th>Id</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
-                                        <th>Max Score ({cls[0].max_score})</th>
+                                        <th>Max Score ({cls[0].max_score}) </th>
                                         <th>Max Unit Score ({cls[0].max_unit_score})</th>
-                                        <th>Note</th>
+                                        <th>Note </th>
 
 
 
@@ -147,11 +166,16 @@ const Assignment = ({ s }) => {
                                             <td>{person.student_lastname}</td>
                                             <td >
                                                 {editScore !== j ?
-                                                    <div onClick={() => handleClick(j)}>{person.student_score}</div>
+                                                    <div onClick={() => {
+                                                        handleClick(j)
+                                                        setNote(person.score_note)
+                                                        setAssignment(person.student_score)
+
+                                                    }}>{person.student_score}</div>
                                                     :
                                                     <Form onSubmit={() => {
                                                         handleClick(j)
-                                                        editAssignment(person.score_id, person.student_id)
+                                                        editAssignment(person.score_id, person.student_id, person.max_score)
                                                     }}>
 
                                                         <FormControl
@@ -262,9 +286,11 @@ const Assignment = ({ s }) => {
                         </lord-icon>
                     </Button>
                     <Button className="btn py-0  border-success" variant="" onClick={() => {
+                        addAssignment()
                         setTimeout(() => {
-                            addAssignment()
-                        }, 1500)
+                            setRefresh(refresh + 1)
+                            setShow(false)
+                        }, 2000)
                     }}>
                         Add
                         <lord-icon

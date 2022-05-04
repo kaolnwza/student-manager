@@ -1,7 +1,7 @@
 
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 // Import Swiper styles
 import "swiper/css";
@@ -11,43 +11,55 @@ import "swiper/css/navigation";
 // import required modules
 import { Parallax, Pagination, Navigation } from "swiper";
 import Link from "next/link";
+import { useEffect, useState } from 'react';
+import { Router, useRouter } from 'next/router';
 
 export const getServerSideProps = async (ctx) => {
-  const res = await fetch(`http://${process.env.ip}:3000/util/subject/getall`)
-  const json = await res.json()
-  console.log(json);
-  return { props: { subjects: json } }
+
+
+  const resTeacher = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `bearer ${ctx.req.cookies.token}`
+    }
+  })
+
+  const person = await resTeacher.json()
+
+  if (person.role == 'teacher') {
+    const resTch = await fetch(`http://${process.env.ip}:3000/util/getarraybyany/subject/teacher_id/${person.user.teacher_id}`)
+    const json = await resTch.json()
+    console.log(json);
+    return {
+      props: {
+        subjects: json,
+        // user: ctx.query.status
+      }
+    }
+
+  } else {
+    const resStd = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}`)
+    const json = await resStd.json()
+    console.log(json);
+
+    return {
+      props: {
+        subjects: json,
+        // user: ctx.query.status
+      }
+    }
+  }
+
+
+
+
 }
 const Home = ({ subjects }) => {
+  const router = useRouter()
 
-  // const [data, setData] = useState('null')
-  // const [loading, setLoading] = useState(false)
-  // const [error, setError] = useState(null)
-  // useEffect(
-  //   () => {
-  //     setLoading(true)
-  //     fetch('http://localhost:3001/util/subject/getall')
-  //       .then((res) => res.json())
-  //       .then((json) => {
-  //         setData(json)
-  //       })
-  //       .catch((error) => setError(error))
-  //       .finally(() => setLoading(false))
-  //   },
-  //   [],
-  // )
-  // if (loading) {
-  //   return (
-  //     <div>Loading...</div>
-  //   )
-  // }
-  // if (error) {
-  //   return (
-  //     <div>Error: {error.message}</div>
-  //   )
-  // }
   return (<>
-    {/* IP : {process.env.REACT_APP_API_KEY} */}
     <Swiper
       style={{
         "--swiper-navigation-color": "#000",
@@ -118,8 +130,11 @@ const Home = ({ subjects }) => {
 
     </Swiper>
 
+
+    {/* <Button onClick={() => reload()}>re</Button> */}
   </>
   )
 }
 
 export default Home;
+
