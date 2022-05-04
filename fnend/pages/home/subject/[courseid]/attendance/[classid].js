@@ -169,7 +169,7 @@ const attendance = ({ cls, std }) => {
 
         <Container className="text-center">
             {std ? null :
-                <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
+                <a class="btn d-block" style={{ position: 'inherit' }} onClick={handleShow}>
                     <lord-icon
                         target="a.btn"
                         src="https://cdn.lordicon.com/auvicynv.json"
