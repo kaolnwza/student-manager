@@ -23,6 +23,5 @@ const GetSubjectByIdQueries = async (subject_id) => {
 
 
 
-
 module.exports = { GetSubjectByIdQueries }
 

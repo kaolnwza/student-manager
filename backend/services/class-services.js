@@ -20,3 +20,13 @@ module.exports.AddClassStudent = async (req) => {
 
     return ErrorHandling(201, resp.msg)
 }
+
+module.exports.GetAllClassByStudentId = async (student_id) => {
+
+    const resp = await class_queries.GetAllClassByStudentIdQueries(student_id)
+    if (resp.err != 200) {
+        return ErrorHandling(500, resp.msg)
+    }
+
+    return ErrorHandling(200, resp.msg)
+}
