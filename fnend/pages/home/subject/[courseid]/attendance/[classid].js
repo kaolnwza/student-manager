@@ -4,7 +4,8 @@ import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Fo
 // import { stringifyQuery } from "next/dist/server/server-route-utils";
 
 export const getServerSideProps = async (ctx) => {
-    const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + ctx.query.classid, {
+
+    const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -12,16 +13,47 @@ export const getServerSideProps = async (ctx) => {
             'Authorization': `bearer ${ctx.req.cookies.token}`
         }
     })
-    const classes = await resClass.json()
 
-    return {
-        props: {
-            cls: classes
+    const person = await resRole.json()
+    console.log(person.user.student_id);
+    if (person.role == 'teacher') {
+        const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + ctx.query.classid, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${ctx.req.cookies.token}`
+            }
+        })
+        const classes = await resClass.json()
+
+        return {
+            props: {
+                cls: classes
+            }
+        }
+    } else {
+        const resClass = await fetch(`http://${process.env.ip}:3000/student/attendance/${ctx.query.classid}/${person.user.student_id}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${ctx.req.cookies.token}`
+            }
+        })
+        const classes = await resClass.json()
+        console.log(classes);
+        return {
+            props: {
+                cls: classes,
+                std: true
+            }
         }
     }
+
 }
 
-const attendance = ({ cls }) => {
+const attendance = ({ cls, std }) => {
     const [classes, setClasses] = useState(cls);
     const [refresh, setRefresh] = useState(0);
 
@@ -136,130 +168,184 @@ const attendance = ({ cls }) => {
     return (
 
         <Container className="text-center">
-            <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
-                <lord-icon
-                    target="a.btn"
-                    src="https://cdn.lordicon.com/auvicynv.json"
-                    trigger="morph"
-                    style={{ height: '3rem', width: '3rem' }}
-                >
-                </lord-icon>
-                <p>Add Attendance</p>
-            </a>
-            {isEmpty ? null :
+            {std ? null :
+                <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
+                    <lord-icon
+                        target="a.btn"
+                        src="https://cdn.lordicon.com/auvicynv.json"
+                        trigger="morph"
+                        style={{ height: '3rem', width: '3rem' }}
+                    >
+                    </lord-icon>
+                    <p>Add Attendance</p>
+                </a>
+            }
+            {isEmpty ? <>No Attendance Yet</> :
+                std ?
+                    <>
+                        <h2>ID : {cls[0].student_id}</h2>
+                        <h1 className="mb-5">{cls[0].student_firstname} {cls[0].student_lastname}</h1>
+                        <Table borderless hover>
+                            {console.log(cls)}
+                            <thead>
+                                <tr>
+                                    {cls.map(week =>
+                                        <th>{week.attendance_name}</th>
+                                    )}
 
-                <Tabs
-                    activeKey={key}
-                    onSelect={(k) => setKey(k)}
-                    className="mb-3 justify-content-center "
-                >
-                    {classes.map((cls, i) =>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {cls.map(week =>
+                                        <td>{
+                                            week.attendance_status == 'come' ?
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/hjeefwhm.json"
+                                                    trigger="morph"
+                                                    style={{ cursor: 'pointer' }}
+                                                >
+                                                </lord-icon>
+                                                :
+                                                (week.attendance_status == 'notcome' ?
+                                                    <lord-icon
+                                                        src="https://cdn.lordicon.com/vfzqittk.json"
+                                                        trigger="morph"
 
-                        <Tab key={i} eventKey={i} title={`${cls[0].attendance_name}`} style={{ height: '40vh', overflowY: 'scroll' }} >
+                                                        style={{ cursor: 'pointer' }}
 
-                            <Table borderless hover className="text-center" >
-                                <thead>
-                                    <tr >
-                                        <th>Id</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Status</th>
-                                        <th>Note</th>
+                                                    >
+                                                    </lord-icon>
+                                                    :
+                                                    <lord-icon
+                                                        src="https://cdn.lordicon.com/abgtphux.json"
+                                                        trigger="morph"
+                                                        style={{ cursor: 'pointer' }}
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cls.map((person, j) =>
-                                        <tr>
-                                            <td>{person.student_id} </td>
-                                            <td>{person.student_firstname}</td>
-                                            <td>{person.student_lastname}</td>
-                                            {/* {person.attendance_status = 'come'} */}
-                                            <td className="w-25 p-0 m-0">
-                                                {expandedId !== j ?
-                                                    person.attendance_status == 'come' ?
-                                                        <lord-icon
-                                                            src="https://cdn.lordicon.com/hjeefwhm.json"
-                                                            trigger="morph"
-                                                            style={{ cursor: 'pointer' }}
-                                                            onClick={() => {
-                                                                setNote(person.attendance_note)
-                                                                handleExpandClick(j)
-                                                            }}
-                                                        >
-                                                        </lord-icon>
-                                                        :
-                                                        (person.attendance_status == 'notcome' ?
+                                                    >
+                                                    </lord-icon>
+                                                )}</td>
+                                    )}
+                                </tr>
+
+
+                            </tbody>
+                        </Table></>
+                    :
+
+
+                    <Tabs
+                        activeKey={key}
+                        onSelect={(k) => setKey(k)}
+                        className="mb-3 justify-content-center "
+                    >
+                        {classes.map((cls, i) =>
+
+                            <Tab key={i} eventKey={i} title={`${cls[0].attendance_name}`} style={{ height: '40vh', overflowY: 'scroll' }} >
+
+                                <Table borderless hover className="text-center" >
+                                    <thead>
+                                        <tr >
+                                            <th>Id</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Status</th>
+                                            <th>Note</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {cls.map((person, j) =>
+                                            <tr>
+                                                <td>{person.student_id} </td>
+                                                <td>{person.student_firstname}</td>
+                                                <td>{person.student_lastname}</td>
+                                                {/* {person.attendance_status = 'come'} */}
+                                                <td className="w-25 p-0 m-0">
+                                                    {expandedId !== j ?
+                                                        person.attendance_status == 'come' ?
                                                             <lord-icon
-                                                                src="https://cdn.lordicon.com/vfzqittk.json"
+                                                                src="https://cdn.lordicon.com/hjeefwhm.json"
                                                                 trigger="morph"
+                                                                style={{ cursor: 'pointer' }}
                                                                 onClick={() => {
                                                                     setNote(person.attendance_note)
                                                                     handleExpandClick(j)
                                                                 }}
-                                                                style={{ cursor: 'pointer' }}
-
                                                             >
                                                             </lord-icon>
                                                             :
-                                                            <lord-icon
-                                                                src="https://cdn.lordicon.com/abgtphux.json"
-                                                                trigger="morph"
-                                                                style={{ cursor: 'pointer' }}
-                                                                onClick={() => {
-                                                                    setNote(person.attendance_note)
-                                                                    handleExpandClick(j)
-                                                                }}
-                                                            >
-                                                            </lord-icon>
-                                                        )
-                                                    :
-                                                    <ButtonGroup >
-                                                        {status.map((radio, idx) => (
-                                                            <ToggleButton
-                                                                className="p-0"
-                                                                key={idx}
-                                                                id={`radio-${idx}`}
-                                                                type="radio"
-                                                                variant={radio.color}
-                                                                name="radio"
-                                                                value={radio.value}
-                                                                // checked={radioValue === radio.value}
-                                                                onChange={(e) => {
-                                                                    handleExpandClick(j)
-                                                                    EditStudent(e.currentTarget.value, person.student_id)
-                                                                }}
-                                                                onClick={(e) => {
-                                                                    setAttendanceId(person.attendance_id)
-                                                                }}
-                                                            >
-                                                                {radio.name}
+                                                            (person.attendance_status == 'notcome' ?
+                                                                <lord-icon
+                                                                    src="https://cdn.lordicon.com/vfzqittk.json"
+                                                                    trigger="morph"
+                                                                    onClick={() => {
+                                                                        setNote(person.attendance_note)
+                                                                        handleExpandClick(j)
+                                                                    }}
+                                                                    style={{ cursor: 'pointer' }}
+
+                                                                >
+                                                                </lord-icon>
+                                                                :
+                                                                <lord-icon
+                                                                    src="https://cdn.lordicon.com/abgtphux.json"
+                                                                    trigger="morph"
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    onClick={() => {
+                                                                        setNote(person.attendance_note)
+                                                                        handleExpandClick(j)
+                                                                    }}
+                                                                >
+                                                                </lord-icon>
+                                                            )
+                                                        :
+                                                        <ButtonGroup >
+                                                            {status.map((radio, idx) => (
+                                                                <ToggleButton
+                                                                    className="p-0"
+                                                                    key={idx}
+                                                                    id={`radio-${idx}`}
+                                                                    type="radio"
+                                                                    variant={radio.color}
+                                                                    name="radio"
+                                                                    value={radio.value}
+                                                                    // checked={radioValue === radio.value}
+                                                                    onChange={(e) => {
+                                                                        handleExpandClick(j)
+                                                                        EditStudent(e.currentTarget.value, person.student_id)
+                                                                    }}
+                                                                    onClick={(e) => {
+                                                                        setAttendanceId(person.attendance_id)
+                                                                    }}
+                                                                >
+                                                                    {radio.name}
 
 
-                                                            </ToggleButton>
-                                                        ))}
+                                                                </ToggleButton>
+                                                            ))}
 
-                                                    </ButtonGroup>
-                                                }
-                                            </td>
-                                            <td className="w-25 p-0 ">
-                                                {expandedId !== j ?
-                                                    person.attendance_note :
-                                                    <FormControl
-                                                        className="w-50 d-inline"
-                                                        placeholder="Note"
-                                                        defaultValue={person.attendance_note}
-                                                        onChange={(e) => setNote(e.target.value)}
-                                                    />
-                                                }
-                                            </td>
+                                                        </ButtonGroup>
+                                                    }
+                                                </td>
+                                                <td className="w-25 p-0 ">
+                                                    {expandedId !== j ?
+                                                        person.attendance_note :
+                                                        <FormControl
+                                                            className="w-50 d-inline"
+                                                            placeholder="Note"
+                                                            defaultValue={person.attendance_note}
+                                                            onChange={(e) => setNote(e.target.value)}
+                                                        />
+                                                    }
+                                                </td>
 
-                                        </tr>)}
-                                </tbody>
-                            </Table>
-                        </Tab>)
-                    }
-                </Tabs>
+                                            </tr>)}
+                                    </tbody>
+                                </Table>
+                            </Tab>)
+                        }
+                    </Tabs>
             }
 
             {/* Add Modal */}

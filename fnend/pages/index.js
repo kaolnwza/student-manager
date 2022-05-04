@@ -3,13 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import Link from "next/link";
 import Login from '../components/Login';
-import { useAppContext } from '../context/state';
-import UserContext from '../context/state';
 
 const login = () => {
-    // const mycontext = useAppContext();
-    const [user, setUser] = useState(false)
-    const value = { user, setUser };
 
     const [token, setToken] = useState(false)
 
@@ -53,9 +48,7 @@ const login = () => {
                 {/* {token} */}
             </Col>
             <Col>
-                <UserContext.Provider value={value}>
-                    <Login />
-                </UserContext.Provider>
+                <Login />
             </Col>
         </Row>);
     }

@@ -28,6 +28,7 @@ const Navigate = () => {
         
       "
         >
+            {user ? 'true' : 'false'}
             <li className="pl-2 my-2 ">
                 <Link href='/home'>
                     <div>
@@ -43,46 +44,49 @@ const Navigate = () => {
                     </div>
                 </Link>
             </li>
+            {user ?
+                <li className="pl-2 my-2 " >
+                    <Link href='/' >
 
-            <li className="pl-2 my-2 " >
-                {/* <Link href='/' > */}
+                        <div onClick={() => {
+                            if (confirm('Do you want to log out?')) {
+                                setUser(false)
+                                window.localStorage.removeItem('token')
+                                router.push('/')
+                            }
 
-                <div onClick={() => {
-                    if (confirm('Do you want to log out?')) {
-                        setUser(false)
-                        window.localStorage.removeItem('token')
-                        router.push('/')
-                    }
+                        }}>
+                            <lord-icon
+                                src="https://cdn.lordicon.com/iiueiwdd.json"
+                                trigger="morph"
+                                style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
+                            >
+                            </lord-icon>
+                            <article>Log Out</article>
+                        </div>
+                    </Link>
 
-                }}>
-                    <lord-icon
-                        src="https://cdn.lordicon.com/iiueiwdd.json"
-                        trigger="morph"
-                        style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
-                    >
-                    </lord-icon>
-                    <article>Log Out</article>
-                </div>
-                {/* </Link> */}
+                </li>
+                :
+                <li className="pl-2 my-2 " >
+                    <Link href='/'>
+                        <div onClick={() => {
+                            router.push('/')
+                            setUser(true)
+                        }}>
+                            <lord-icon
+                                src="https://cdn.lordicon.com/gkditgni.json"
+                                trigger="morph"
+                                style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
 
-            </li>
+                            >
+                            </lord-icon>
+                            <article>Log In</article>
+                        </div>
+                    </Link>
+                </li>
 
-            <li className="pl-2 my-2 " >
-                {/* <Link href='/'> */}
-                <div onClick={() => { router.push('/') }}>
-                    <lord-icon
-                        src="https://cdn.lordicon.com/gkditgni.json"
-                        trigger="morph"
-                        style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
-
-                    >
-                    </lord-icon>
-                    <article>Log In</article>
-                </div>
-                {/* </Link> */}
-            </li>
-
-
+            }
 
 
 

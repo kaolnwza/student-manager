@@ -17,7 +17,7 @@ import { Router, useRouter } from 'next/router';
 export const getServerSideProps = async (ctx) => {
 
 
-  const resTeacher = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
+  const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -26,23 +26,22 @@ export const getServerSideProps = async (ctx) => {
     }
   })
 
-  const person = await resTeacher.json()
+  const person = await resRole.json()
 
   if (person.role == 'teacher') {
     const resTch = await fetch(`http://${process.env.ip}:3000/util/getarraybyany/subject/teacher_id/${person.user.teacher_id}`)
     const json = await resTch.json()
-    console.log(json);
+    // console.log(json);
     return {
       props: {
         subjects: json,
-        // user: ctx.query.status
       }
     }
 
   } else {
     const resStd = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}`)
     const json = await resStd.json()
-    console.log(json);
+    // console.log(json);
 
     return {
       props: {
@@ -103,6 +102,8 @@ const Home = ({ subjects }) => {
               </div>
               <div className="subtitle" data-swiper-parallax="-200">
                 Coruse Code : {sub.subject_id}
+              </div>
+              <div className="subtitle" data-swiper-parallax="-200">
               </div>
               {/* <div className="subtitle" data-swiper-parallax="-200">
                 Teacher : {sub.teacher_id}

@@ -3,7 +3,7 @@ import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Fo
 import { useEffect, useState } from "react"
 
 export const getServerSideProps = async (ctx) => {
-    const resScore = await fetch(`http://${process.env.ip}:3000/score/class/` + ctx.query.classid, {
+    const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -11,16 +11,45 @@ export const getServerSideProps = async (ctx) => {
             'Authorization': `bearer ${ctx.req.cookies.token}`
         }
     })
-    const score = await resScore.json()
 
-    return {
-        props: {
-            s: score
+    const person = await resRole.json()
+    if (person.role == 'teacher') {
+        const resScore = await fetch(`http://${process.env.ip}:3000/score/class/` + ctx.query.classid, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${ctx.req.cookies.token}`
+            }
+        })
+        const score = await resScore.json()
+
+        return {
+            props: {
+                s: score
+            }
+        }
+    } else {
+        const resScore = await fetch(`http://${process.env.ip}:3000/student/score/${ctx.query.classid}/${person.user.student_id}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${ctx.req.cookies.token}`
+            }
+        })
+        const score = await resScore.json()
+        console.log(score);
+        return {
+            props: {
+                s: score,
+                std: true
+            }
         }
     }
 }
 
-const Assignment = ({ s }) => {
+const Assignment = ({ s, std }) => {
     const rounter = useRouter()
     const [score, setScore] = useState(s);
     const [refresh, setRefresh] = useState(0);
@@ -120,106 +149,139 @@ const Assignment = ({ s }) => {
 
     return (
         <Container className="text-center">
-            <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
-                <lord-icon
-                    target="a.btn"
-                    src="https://cdn.lordicon.com/kpsnbsyj.json"
-                    trigger="morph"
-                    style={{ height: '3rem', width: '3rem' }}
-                >
-                </lord-icon>
-                <p>Add Assignment</p>
-            </a>
-            {isEmpty ? null :
-                <Tabs
-                    activeKey={key}
-                    onSelect={(k) => setKey(k)}
-                    className="mb-3 justify-content-center "
-                >
+            {std ? null :
+                <a class="btn" style={{ position: 'inherit' }} onClick={handleShow}>
+                    <lord-icon
+                        target="a.btn"
+                        src="https://cdn.lordicon.com/kpsnbsyj.json"
+                        trigger="morph"
+                        style={{ height: '3rem', width: '3rem' }}
+                    >
+                    </lord-icon>
+                    <p>Add Assignment</p>
+                </a>}
+            {isEmpty ? <>No Assigntment Yet</> :
+                std ? <>
+                    <h2>ID : {s[0].student_id}</h2>
+                    <h1 className="mb-5">{s[0].student_firstname} {s[0].student_lastname}</h1>
 
-                    {score.map((cls, i) =>
+                    <Row style={{ fontWeight: 'bolder' }}>
+                        {s.map(s =>
+                            <Col>{s.score_name}
+                                <Row className='p-3 '>
+                                    <Col>Max score ({s.max_score})</Col>
+                                    <Col>Max unit score ({s.max_unit_score})</Col>
 
-                        <Tab key={i} eventKey={i} title={`${cls[0].score_name}`} style={{ height: '40vh', overflowY: 'scroll' }}>
+                                </Row>
+                            </Col>
+                        )}
 
-                            <Table borderless hover className="text-center" >
-                                <thead>
-                                    <tr >
-                                        <th>Id</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Max Score ({cls[0].max_score}) </th>
-                                        <th>Max Unit Score ({cls[0].max_unit_score})</th>
-                                        <th>Note </th>
+                    </Row>
 
 
 
+                    <Row>
+                        {s.map(s => <>
+                            <Col>{s.student_score}</Col>
+                            <Col>{s.student_unit_score}</Col>
+                        </>
+                        )}
+                    </Row>
+
+
+                </>
+                    :
+
+                    <Tabs
+                        activeKey={key}
+                        onSelect={(k) => setKey(k)}
+                        className="mb-3 justify-content-center "
+                    >
+
+                        {score.map((cls, i) =>
+
+                            <Tab key={i} eventKey={i} title={`${cls[0].score_name}`} style={{ height: '40vh', overflowY: 'scroll' }}>
+
+                                <Table borderless hover className="text-center" >
+                                    <thead>
+                                        <tr >
+                                            <th>Id</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Max Score ({cls[0].max_score}) </th>
+                                            <th>Max Unit Score ({cls[0].max_unit_score})</th>
+                                            <th>Note </th>
 
 
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cls.map((person, j) =>
-                                        <tr key={j}>
-                                            <td>{person.student_id} {person.score_id}</td>
-                                            <td>{person.student_firstname}</td>
-                                            <td>{person.student_lastname}</td>
-                                            <td >
-                                                {editScore !== j ?
-                                                    <div onClick={() => {
-                                                        handleClick(j)
-                                                        setNote(person.score_note)
-                                                        setAssignment(person.student_score)
 
-                                                    }}>{person.student_score}</div>
-                                                    :
-                                                    <Form onSubmit={() => {
-                                                        handleClick(j)
-                                                        editAssignment(person.score_id, person.student_id, person.max_score)
-                                                    }}>
 
-                                                        <FormControl
-                                                            type='number'
-                                                            className="w-50 d-inline"
-                                                            placeholder="Score"
-                                                            defaultValue={`${person.student_score}`}
-                                                            onChange={(e) => setAssignment(e.target.value)}
-                                                        />
-                                                    </Form>
 
-                                                }
-                                            </td>
-                                            <td>{person.student_unit_score.toFixed(2)}</td>
-                                            <td>
-                                                {editScore !== j ?
-                                                    <div onClick={() => handleClick(j)}>{person.score_note}</div>
-                                                    :
-                                                    <Form onSubmit={() => {
-                                                        handleClick(j)
-                                                        editAssignment(person.score_id, person.student_id)
-                                                    }}
-                                                    >
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {cls.map((person, j) =>
+                                            <tr key={j}>
+                                                <td>{person.student_id} {person.score_id}</td>
+                                                <td>{person.student_firstname}</td>
+                                                <td>{person.student_lastname}</td>
+                                                <td >
+                                                    {editScore !== j ?
+                                                        <div onClick={() => {
+                                                            handleClick(j)
+                                                            setNote(person.score_note)
+                                                            setAssignment(person.student_score)
 
-                                                        <FormControl
-                                                            // type='text'
-                                                            className="w-50 d-inline"
-                                                            placeholder="Note"
-                                                            // value={Note}
-                                                            defaultValue={person.score_note}
+                                                        }}>{person.student_score}</div>
+                                                        :
+                                                        <Form onSubmit={() => {
+                                                            handleClick(j)
+                                                            editAssignment(person.score_id, person.student_id, person.max_score)
+                                                        }}>
 
-                                                            onChange={(e) => setNote(e.target.value)}
-                                                        />
-                                                    </Form>
+                                                            <FormControl
+                                                                type='number'
+                                                                className="w-50 d-inline"
+                                                                placeholder="Score"
+                                                                defaultValue={`${person.student_score}`}
+                                                                onChange={(e) => setAssignment(e.target.value)}
+                                                            />
+                                                        </Form>
 
-                                                }
+                                                    }
+                                                </td>
+                                                <td>{person.student_unit_score.toFixed(2)}</td>
+                                                <td>
+                                                    {editScore !== j ?
+                                                        <div onClick={() => handleClick(j)}>{person.score_note}</div>
+                                                        :
+                                                        <Form onSubmit={() => {
+                                                            handleClick(j)
+                                                            editAssignment(person.score_id, person.student_id)
+                                                        }}
+                                                        >
 
-                                            </td>
-                                        </tr>)}
-                                </tbody>
-                            </Table>
-                        </Tab>)}
-                </Tabs>
+                                                            <FormControl
+                                                                // type='text'
+                                                                className="w-50 d-inline"
+                                                                placeholder="Note"
+                                                                // value={Note}
+                                                                defaultValue={person.score_note}
+
+                                                                onChange={(e) => setNote(e.target.value)}
+                                                            />
+                                                        </Form>
+
+                                                    }
+
+                                                </td>
+                                            </tr>)}
+                                    </tbody>
+                                </Table>
+                            </Tab>)}
+                    </Tabs>
             }
+
 
             <Modal
                 show={show}
@@ -302,7 +364,7 @@ const Assignment = ({ s }) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </Container>);
+        </Container >);
 }
 
 export default Assignment;

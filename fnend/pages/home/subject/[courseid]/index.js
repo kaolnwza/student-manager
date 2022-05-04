@@ -5,13 +5,35 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 export const getServerSideProps = async (ctx) => {
-    const resSubDetail = await fetch(`http://${process.env.ip}:3000/subject/detail/` + ctx.query.courseid)
-    const subjectDetail = await resSubDetail.json()
-    console.log(ctx.query.courseid);
-    return {
-        props: {
-            course: subjectDetail
 
+    const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${ctx.req.cookies.token}`
+        }
+    })
+
+    const person = await resRole.json()
+
+    if (person.role == 'student') {
+        const resStdDetail = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}/subject/` + ctx.query.courseid)
+        const subjectDetail = await resStdDetail.json()
+        return {
+            props: {
+                course: subjectDetail
+
+            }
+        }
+    } else {
+        const resTchDetail = await fetch(`http://${process.env.ip}:3000/subject/detail/` + ctx.query.courseid)
+        const json = await resTchDetail.json()
+        return {
+            props: {
+                course: json
+
+            }
         }
     }
 }
@@ -43,7 +65,7 @@ const Subject = ({ course }) => {
                         {course.map((cls, index) =>
                             <Col key={index}>
                                 {cls.dayweek} <br />
-                                {cls.time_start} - {cls.time_end} (Sec {index + 1})
+                                {cls.time_start} - {cls.time_end}
                                 <Row className='mb-5'>
                                     <Col lg={3}>
                                         <Link href={{ pathname: `/home/subject/${router.query.courseid}/score/${cls.class_id}` }}>

@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const { user, setUser } = useContext(UserContext);
     const rounter = useRouter()
 
     const submit = async (e) => {
