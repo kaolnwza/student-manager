@@ -61,7 +61,8 @@ const Assignment = ({ s }) => {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${window.localStorage.getItem('token')}`
             }
         })
         const response = await resAttendance.json()
@@ -85,7 +86,8 @@ const Assignment = ({ s }) => {
             method: 'PUT',
             body: JSON.stringify(data),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${window.localStorage.getItem('token')}`
             }
         })
         const response = await resAttendance.json()
@@ -118,7 +120,7 @@ const Assignment = ({ s }) => {
 
                     {score.map((cls, i) =>
 
-                        <Tab key={i} eventKey={i} title={`${cls[i].score_name}`} style={{ height: '40vh', overflowY: 'scroll' }}>
+                        <Tab key={i} eventKey={i} title={`${cls[0].score_name}`} style={{ height: '40vh', overflowY: 'scroll' }}>
 
                             <Table borderless hover className="text-center" >
                                 <thead>
@@ -126,8 +128,8 @@ const Assignment = ({ s }) => {
                                         <th>Id</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
-                                        <th>Max Score ({cls[i].max_score})</th>
-                                        <th>Max Unit Score ({cls[i].max_unit_score})</th>
+                                        <th>Max Score ({cls[0].max_score})</th>
+                                        <th>Max Unit Score ({cls[0].max_unit_score})</th>
                                         <th>Note</th>
 
 

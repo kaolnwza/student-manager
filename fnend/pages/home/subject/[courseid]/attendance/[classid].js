@@ -72,12 +72,12 @@ const attendance = ({ cls }) => {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${window.localStorage.getItem('token')}`
             }
         })
 
         const response = await resAttendance.json()
-        setRefresh(refresh + 1)
 
         setShow(false)
         setForm('')
@@ -101,12 +101,14 @@ const attendance = ({ cls }) => {
             method: 'PUT',
             body: JSON.stringify(data),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${window.localStorage.getItem('token')}`
             }
         })
         const response = await resEdit.json()
         console.log(response);
         setNote('')
+        setRefresh(refresh - 1)
     }
 
     useEffect(() => {
@@ -114,6 +116,8 @@ const attendance = ({ cls }) => {
             const resClass = await fetch('http://localhost:3000/attendance/class/' + rounter.query.classid)
             const classes = await resClass.json()
             setClasses(classes)
+            // console.log();
+
         }
 
         fetchMyAPI()
@@ -265,8 +269,11 @@ const attendance = ({ cls }) => {
                             onChange={(e) => setForm(e.target.value)}
                         />
                         <Button className="btn py-0  border-success" variant="" onClick={() => {
+
                             setTimeout(() => {
                                 addAttendance()
+                                setRefresh(refresh + 1)
+
                             }, 1500)
                         }}>
                             Add
