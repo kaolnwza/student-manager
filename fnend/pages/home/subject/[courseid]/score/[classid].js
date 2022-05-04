@@ -240,7 +240,7 @@ const Assignment = ({ s }) => {
                         </Col>
 
                     </Row>
-                    Name :{form} Score : {scores} Unit : {unit} Class_id :{rounter.query.classid}
+                    {/* Name :{form} Score : {scores} Unit : {unit} Class_id :{rounter.query.classid} */}
 
                 </Modal.Body>
                 <Modal.Footer>
