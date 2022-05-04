@@ -20,9 +20,9 @@ const login = () => {
 
     const submit = async (e) => {
         e.preventDefault()
-        rounter.push('/home')
-
-        const res = await fetch('http://localhost:3000/auth/login', {
+        // rounter.push('/home')
+        console.log(process.env.ip);
+        const res = await fetch(`http://${process.env.ip}:3000/auth/login`, {
             method: 'POST',
             credentials: 'include',
             body: JSON.stringify({

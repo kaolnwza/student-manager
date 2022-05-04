@@ -12,9 +12,10 @@ import "swiper/css/navigation";
 import { Parallax, Pagination, Navigation } from "swiper";
 import Link from "next/link";
 
-export const getServerSideProps = async () => {
-  const res = await fetch('http://localhost:3000/util/subject/getall')
+export const getServerSideProps = async (ctx) => {
+  const res = await fetch(`http://${process.env.ip}:3000/util/subject/getall`)
   const json = await res.json()
+  console.log(json);
   return { props: { subjects: json } }
 }
 const Home = ({ subjects }) => {
@@ -46,7 +47,7 @@ const Home = ({ subjects }) => {
   //   )
   // }
   return (<>
-
+    {/* IP : {process.env.REACT_APP_API_KEY} */}
     <Swiper
       style={{
         "--swiper-navigation-color": "#000",
