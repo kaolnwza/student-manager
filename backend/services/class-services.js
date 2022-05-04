@@ -30,9 +30,9 @@ module.exports.GetAllClassByStudentId = async (student_id) => {
 
     return ErrorHandling(200, resp.msg)
 }
-module.exports.GetAllClassDetailByStudentId = async (student_id, class_id) => {
+module.exports.GetAllClassDetailByStudentId = async (student_id, subject_id) => {
 
-    const resp = await class_queries.GetAllClassDetailByStudentIdQueries(student_id, class_id)
+    const resp = await class_queries.GetAllClassDetailByStudentIdQueries(student_id, subject_id)
     if (resp.err != 200) {
         return ErrorHandling(500, resp.msg)
     }

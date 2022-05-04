@@ -50,7 +50,7 @@ module.exports.GetAllClassByStudentIdQueries = async (student_id) => {
 
 
 }
-module.exports.GetAllClassDetailByStudentIdQueries = async (student_id, class_id) => {
+module.exports.GetAllClassDetailByStudentIdQueries = async (student_id, subject_id) => {
     try {
         const query_stm = await pool.query(`
         select c.class_id, c.dayweek, c.time_start, c.time_end, 
@@ -62,7 +62,7 @@ module.exports.GetAllClassDetailByStudentIdQueries = async (student_id, class_id
         join teacher as t on s.teacher_id = t.teacher_id 
         join class_student as cs on c.class_id = cs.class_id 
         join student as std on std.student_id = cs.student_id 
-        where std.student_id = $1 and c.class_id = $2;`, [student_id, class_id])
+        where std.student_id = $1 and s.subject_id = $2;`, [student_id, subject_id])
 
         return ErrorHandling(200, query_stm.rows[0])
 

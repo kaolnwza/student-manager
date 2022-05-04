@@ -5,7 +5,8 @@ const { AuthenticationToken } = require("../middleware/auth-middleware")
 
 router.post("/addclass", AuthenticationToken('teacher'), async (req, res) => {
     const resp = await services.AddClassAttendance(req.body)
-    console.log(req.body)
+
+
     res.status(resp.err).send(resp.msg)
 })
 
