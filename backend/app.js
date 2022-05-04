@@ -6,11 +6,11 @@ const port = 3000
 var cors = require('cors')
 
 const corsOptions = {
-  origin: 'http://localhost:8080',
+  origin: 'http://' + process.env.FRONTEND_IP + ':8080',
   credentials: true,
 };
 
-app.options('http://localhost:8080', cors())
+app.options('http://' + process.env.FRONTEND_IP + ':8080', cors())
 
 const router = require("./controllers/controller")
 
