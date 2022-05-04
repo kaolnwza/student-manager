@@ -64,7 +64,7 @@ module.exports.GetAllClassDetailByStudentIdQueries = async (student_id, subject_
         join student as std on std.student_id = cs.student_id 
         where std.student_id = $1 and s.subject_id = $2;`, [student_id, subject_id])
 
-        return ErrorHandling(200, query_stm.rows[0])
+        return ErrorHandling(200, query_stm.rows)
 
     } catch (error) {
         console.log(error)
