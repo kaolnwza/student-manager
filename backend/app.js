@@ -20,6 +20,10 @@ app.use(express.json())
 app.use(router)
 
 
+require('dotenv').config()
+
+console.log(process.env.DB_HOST)
+
 app.listen(port, () => {
   console.log("Server has started!")
 })
