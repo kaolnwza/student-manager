@@ -45,25 +45,23 @@ const Navigate = () => {
             </li>
             {user ?
                 <li className="pl-2 my-2 " >
-                    <Link href='/' >
 
-                        <div onClick={() => {
-                            if (confirm('Do you want to log out?')) {
-                                setUser(false)
-                                window.localStorage.removeItem('token')
-                                router.push('/')
-                            }
+                    <div onClick={() => {
+                        if (confirm('Do you want to log out?')) {
+                            setUser(false)
+                            window.localStorage.removeItem('token')
+                            router.push('/')
+                        }
 
-                        }}>
-                            <lord-icon
-                                src="https://cdn.lordicon.com/iiueiwdd.json"
-                                trigger="morph"
-                                style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
-                            >
-                            </lord-icon>
-                            <article>Log Out</article>
-                        </div>
-                    </Link>
+                    }}>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/iiueiwdd.json"
+                            trigger="morph"
+                            style={{ width: '3.5rem', height: '3.5rem', cursor: 'pointer' }}
+                        >
+                        </lord-icon>
+                        <article>Log Out</article>
+                    </div>
 
                 </li>
                 :
