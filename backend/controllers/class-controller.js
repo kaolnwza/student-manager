@@ -15,6 +15,13 @@ router.get("/student/:student_id", async (req, res) => {
 
     res.status(resp.err).send(resp.msg)
 })
+router.get("/student/:student_id/class/:class_id", async (req, res) => {
+    const student_id = req.params['student_id']
+    const class_id = req.params['class_id']
+    const resp = await services.GetAllClassDetailByStudentId(student_id, class_id)
+
+    res.status(resp.err).send(resp.msg)
+})
 
 router.get("/availablestudent/:class_id/:student_id", async (req, res) => {
     const class_id = req.params["class_id"]
