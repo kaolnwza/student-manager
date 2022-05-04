@@ -232,7 +232,7 @@ const attendance = ({ cls }) => {
                                                         value={Note}
                                                         onChange={(e) => setNote(e.target.value)}
                                                     />
-                                                    }
+                                                }
                                             </td>
 
                                         </tr>)}
@@ -278,7 +278,7 @@ const attendance = ({ cls }) => {
                             </lord-icon>
                         </Button>
                     </InputGroup>
-                    Name :{form} Class_id :{rounter.query.classid}
+                    {/* Name :{form} Class_id :{rounter.query.classid} */}
 
                 </Modal.Body>
                 <Modal.Footer>
