@@ -17,7 +17,7 @@ import { Router, useRouter } from 'next/router';
 export const getServerSideProps = async (ctx) => {
 
 
-  const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
+  const resRole = await fetch(`http://100.26.151.80:3000/auth/role/${ctx.req.cookies.token}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -27,10 +27,9 @@ export const getServerSideProps = async (ctx) => {
   })
 
   const person = await resRole.json()
-  console.log(person)
 
   if (person.role == 'teacher') {
-    const resTch = await fetch(`http://${process.env.ip}:3000/util/getarraybyany/subject/teacher_id/${person.user.teacher_id}`)
+    const resTch = await fetch(`http://100.26.151.80:3000/util/getarraybyany/subject/teacher_id/${person.user.teacher_id}`)
     const json = await resTch.json()
     // console.log(json);
     return {
@@ -40,7 +39,7 @@ export const getServerSideProps = async (ctx) => {
     }
 
   } else {
-    const resStd = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}`)
+    const resStd = await fetch(`http://100.26.151.80:3000/class/student/${person.user.student_id}`)
     const json = await resStd.json()
     // console.log(json);
 
