@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const services = require("../services/auth-services")
 const { AuthenticationToken } = require("../middleware/auth-middleware")
+require('dotenv').config()
 
 router.post("/login", async (req, res) => {
     console.log('isin')
@@ -19,7 +20,7 @@ router.post("/login", async (req, res) => {
 })
 
 router.get("/test", async (req, res) => {
-    res.json("kuy prayuth")
+    res.json(process.env.FRONTEND_IP)
 })
 
 router.get("/role/:token", AuthenticationToken(['student', 'teacher']), async (req, res) => {

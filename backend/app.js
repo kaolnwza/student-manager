@@ -6,6 +6,7 @@ const port = 3000
 require('dotenv').config()
 var cors = require('cors')
 
+
 const corsOptions = {
   origin: 'http://' + process.env.FRONTEND_IP + ':8080',
   credentials: true,
@@ -21,7 +22,7 @@ app.use(express.json())
 app.use(router)
 
 
-require('dotenv').config()
+
 
 // console.log(process.env.DB_HOST)
 
