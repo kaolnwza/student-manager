@@ -2,58 +2,18 @@ import { useRouter } from 'next/router'
 import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Form, ButtonGroup, ToggleButton, Row, Col, Alert } from 'react-bootstrap';
 import { useEffect, useState } from "react"
 
-export const getServerSideProps = async (ctx) => {
-    const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${ctx.req.cookies.token}`
-        }
-    })
+// export const getServerSideProps = async (ctx) => {
 
-    const person = await resRole.json()
-    if (person.role == 'teacher') {
-        const resScore = await fetch(`http://${process.env.ip}:3000/score/class/` + ctx.query.classid, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `bearer ${ctx.req.cookies.token}`
-            }
-        })
-        const score = await resScore.json()
+// }
 
-        return {
-            props: {
-                s: score
-            }
-        }
-    } else {
-        const resScore = await fetch(`http://${process.env.ip}:3000/student/score/${ctx.query.classid}/${person.user.student_id}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `bearer ${ctx.req.cookies.token}`
-            }
-        })
-        const score = await resScore.json()
-        console.log(score);
-        return {
-            props: {
-                s: score,
-                std: true
-            }
-        }
-    }
-}
-
-const Assignment = ({ s, std }) => {
+const Assignment = () => {
     const rounter = useRouter()
-    const [score, setScore] = useState(s);
+    const [score, setScore] = useState([-1]);
     const [refresh, setRefresh] = useState(0);
 
+    const [isEmpty, setIsEmpty] = useState(true);
+    const [isLoading, setLoading] = useState(false)
+    const [std, setStd] = useState(false);
 
     const [show, setShow] = useState(false);
     const [key, setKey] = useState(0);
@@ -61,7 +21,7 @@ const Assignment = ({ s, std }) => {
     const [scores, setMaxScore] = useState('');
     const [unit, setUnit] = useState('');
     const [editScore, setEditScore] = useState(-1)
-    const isEmpty = Object.keys(score).length === 0;
+    // const isEmpty = Object.keys(score).length === 0;
     const [assignment, setAssignment] = useState(0);
     const [Note, setNote] = useState('');
 
@@ -73,6 +33,67 @@ const Assignment = ({ s, std }) => {
     const handleClick = (i) => {
         setEditScore(editScore === i ? -1 : i);
     };
+
+    useEffect(() => {
+        setLoading(true)
+        const fetchMyAPI = async () => {
+            const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${window.localStorage.getItem('token')}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                }
+            })
+
+            const person = await resRole.json()
+            if (person.role == 'teacher') {
+                await fetch(`http://${process.env.ip}:3000/score/class/` + rounter.query.classid, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                    }
+                }).then((res) => res.json())
+                    .then((data) => {
+                        console.log(data)
+                        setScore(data)
+                        if (Object.keys(data).length !== 0) {
+                            setIsEmpty(false)
+                        }
+                        setLoading(false)
+                    })
+
+
+            } else {
+                await fetch(`http://${process.env.ip}:3000/student/score/${rounter.query.classid}/${person.user.student_id}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                    }
+                }).then((res) => res.json())
+                    .then((data) => {
+                        console.log(data)
+                        setScore(data)
+                        setStd(true)
+                        if (Object.keys(data).length !== 0) {
+                            setIsEmpty(false)
+                        }
+                        setLoading(false)
+                    })
+
+
+            }
+        }
+
+
+
+        fetchMyAPI()
+    }, [])
+
 
     useEffect(() => {
         const fetchMyAPI = async () => {
@@ -114,6 +135,8 @@ const Assignment = ({ s, std }) => {
         setForm('')
         setMaxScore('')
         setUnit('')
+        setRefresh(refresh + 1)
+
         console.log(response);
     };
 
@@ -145,6 +168,12 @@ const Assignment = ({ s, std }) => {
 
     };
 
+    if (isLoading) return <lord-icon
+        src="https://cdn.lordicon.com/xjovhxra.json"
+        trigger="loop"
+        style={{ height: '5rem', width: '5rem' }}
+    >
+    </lord-icon>
 
 
     return (
@@ -162,11 +191,11 @@ const Assignment = ({ s, std }) => {
                 </a>}
             {isEmpty ? <>No Assigntment Yet</> :
                 std ? <>
-                    <h2>ID : {s[0].student_id}</h2>
-                    <h1 className="mb-5">{s[0].student_firstname} {s[0].student_lastname}</h1>
+                    <h2>ID : {score[0].student_id}</h2>
+                    <h1 className="mb-5">{score[0].student_firstname} {score[0].student_lastname}</h1>
 
                     <Row style={{ fontWeight: 'bolder' }}>
-                        {s.map(s =>
+                        {score.map(s =>
                             <Col>{s.score_name}
                                 <Row className='p-3 '>
                                     <Col>Max score ({s.max_score})</Col>
@@ -181,7 +210,7 @@ const Assignment = ({ s, std }) => {
 
 
                     <Row>
-                        {s.map(s => <>
+                        {score.map(s => <>
                             <Col>{s.student_score}</Col>
                             <Col>{s.student_unit_score}</Col>
                         </>

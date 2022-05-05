@@ -18,6 +18,7 @@ import { Router, useRouter } from 'next/router';
 const Home = () => {
   const [subjects, setSubjects] = useState([])
   const router = useRouter()
+  const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
     // declare the data fetching function
@@ -40,7 +41,7 @@ const Home = () => {
         console.log(json);
 
         setSubjects(json)
-
+        setLoading(false)
 
       } else {
         const resStd = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}`)
@@ -48,6 +49,8 @@ const Home = () => {
         console.log(json);
 
         setSubjects(json)
+        setLoading(false)
+
       }
 
     }
@@ -58,6 +61,12 @@ const Home = () => {
       .catch(console.error);
   }, [])
 
+  if (isLoading) return <lord-icon
+    src="https://cdn.lordicon.com/xjovhxra.json"
+    trigger="loop"
+    style={{ height: '5rem', width: '5rem' }}
+  >
+  </lord-icon>
 
   return (<>
     <Swiper

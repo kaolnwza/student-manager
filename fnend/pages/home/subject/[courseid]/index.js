@@ -17,9 +17,9 @@ const Subject = () => {
 
     useEffect(() => {
         // declare the data fetching function
+        setLoading(true)
 
         const fetchData = async () => {
-            setLoading(true)
             const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${window.localStorage.getItem('token')}`, {
                 method: 'GET',
                 credentials: 'include',
@@ -37,6 +37,7 @@ const Subject = () => {
 
                 setCourse(subjectDetail)
 
+                setLoading(false)
 
 
             } else {
@@ -57,7 +58,12 @@ const Subject = () => {
     }, [])
 
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <lord-icon
+        src="https://cdn.lordicon.com/xjovhxra.json"
+        trigger="loop"
+        style={{ height: '5rem', width: '5rem' }}
+    >
+    </lord-icon>
     return (<>
         <Row className='h-75 mx-5 justify-content-around' style={{
             background: `linear-gradient(180deg, transparent 30%, #f6eeea 30%)`,

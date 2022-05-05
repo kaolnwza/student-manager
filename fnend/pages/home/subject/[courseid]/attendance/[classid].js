@@ -175,19 +175,24 @@ const attendance = () => {
             .catch(console.error);
     }, [])
 
-    // useEffect(() => {
-    //     const fetchMyAPI = async () => {
-    //         const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + rounter.query.classid)
-    //         const classes = await resClass.json()
-    //         setClasses(classes)
-    //         // console.log();
+    useEffect(() => {
+        const fetchMyAPI = async () => {
+            const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + rounter.query.classid)
+            const classes = await resClass.json()
+            setClasses(classes)
+            // console.log();
 
-    //     }
+        }
 
-    //     fetchMyAPI()
-    // }, [refresh])
+        fetchMyAPI()
+    }, [refresh])
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <lord-icon
+        src="https://cdn.lordicon.com/xjovhxra.json"
+        trigger="loop"
+        style={{ height: '5rem', width: '5rem' }}
+    >
+    </lord-icon>
 
     return (
 
@@ -207,13 +212,13 @@ const attendance = () => {
             {isEmpty ? <>No Attendance Yet</> :
                 std ?
                     <>
-                        <h2>ID : {cls[0].student_id}</h2>
-                        <h1 className="mb-5">{cls[0].student_firstname} {cls[0].student_lastname}</h1>
+                        <h2>ID : {classes[0].student_id}</h2>
+                        <h1 className="mb-5">{classes[0].student_firstname} {classes[0].student_lastname}</h1>
                         <Table borderless hover>
-                            {console.log(cls)}
+                            {console.log(classes)}
                             <thead>
                                 <tr>
-                                    {cls.map(week =>
+                                    {classes.map(week =>
                                         <th>{week.attendance_name}</th>
                                     )}
 
@@ -221,7 +226,7 @@ const attendance = () => {
                             </thead>
                             <tbody>
                                 <tr>
-                                    {cls.map(week =>
+                                    {classes.map(week =>
                                         <td>{
                                             week.attendance_status == 'come' ?
                                                 <lord-icon
@@ -287,7 +292,8 @@ const attendance = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/* {cls.map((person, j) =>
+
+                                        {cls.map((person, j) =>
                                             <tr>
                                                 <td>{person.student_id} </td>
                                                 <td>{person.student_firstname}</td>
@@ -372,7 +378,7 @@ const attendance = () => {
                                                 </td>
 
                                             </tr>)
-                                        } */}
+                                        }
                                     </tbody>
                                 </Table>
                             </Tab>)
