@@ -7,7 +7,7 @@ router.get("/detail/:subject_id", async (req, res) => {
     const subject_id = req.params["subject_id"]
 
     const resp = await services.GetSubjectById(subject_id)
-    console.log(req.body);
+    // console.log(req.body);
     res.status(resp.err).send(resp.msg)
 })
 
