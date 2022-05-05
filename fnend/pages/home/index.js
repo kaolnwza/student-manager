@@ -27,6 +27,7 @@ export const getServerSideProps = async (ctx) => {
   })
 
   const person = await resRole.json()
+  console.log(person)
 
   if (person.role == 'teacher') {
     const resTch = await fetch(`http://${process.env.ip}:3000/util/getarraybyany/subject/teacher_id/${person.user.teacher_id}`)
