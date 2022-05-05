@@ -8,6 +8,7 @@ const DB_PASSWORD = "supersaiya55"
 const DB_DATABASE = "postgres"
 const DB_USER = "postgres"
 
-const FRONTEND_IP = "54.91.120.180"
+const FRONTEND_IP = "49.49.222.58"
+// const FRONTEND_IP = "54.91.120.180"
 
 module.exports = { SECRET_KEY, DB_HOST, DB_PASSWORD, DB_DATABASE, DB_USER, FRONTEND_IP }
