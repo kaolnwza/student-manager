@@ -19,8 +19,14 @@ router.post("/login", async (req, res) => {
     res.status(resp.err).json(resp.msg)
 })
 
+router.get("/ip", async (req, res) => {
+    console.log(process.env.FRONTEND_IP)
+    res.json(process.env.FRONTEND_IP + '')
+})
+
 router.get("/test", async (req, res) => {
-    res.json(process.env.FRONTEND_IP)
+
+    res.json("running")
 })
 
 router.get("/role/:token", AuthenticationToken(['student', 'teacher']), async (req, res) => {
