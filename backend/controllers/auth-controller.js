@@ -10,6 +10,7 @@ router.post("/login", async (req, res) => {
     console.log(req.body)
     const resp = await services.Login(req.body)
 
+    res.cookie('token', "")
     res.cookie('token', resp.msg)
 
     // console.log(req.cookies.token)
