@@ -78,7 +78,7 @@ const Assignment = ({ s, std }) => {
         const fetchMyAPI = async () => {
             const resScore = await fetch(`http://${process.env.ip}:3000/score/class/` + rounter.query.classid, {
                 method: 'GET',
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `bearer ${window.localStorage.getItem('token')}`

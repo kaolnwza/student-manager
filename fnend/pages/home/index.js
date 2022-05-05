@@ -14,49 +14,50 @@ import Link from "next/link";
 import { useEffect, useState } from 'react';
 import { Router, useRouter } from 'next/router';
 
-export const getServerSideProps = async (ctx) => {
 
-
-  const resRole = await fetch(`http://100.26.151.80:3000/auth/role/${ctx.req.cookies.token}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `bearer ${ctx.req.cookies.token}`
-    }
-  })
-
-  const person = await resRole.json()
-
-  if (person.role == 'teacher') {
-    const resTch = await fetch(`http://100.26.151.80:3000/util/getarraybyany/subject/teacher_id/${person.user.teacher_id}`)
-    const json = await resTch.json()
-    // console.log(json);
-    return {
-      props: {
-        subjects: json,
-      }
-    }
-
-  } else {
-    const resStd = await fetch(`http://100.26.151.80:3000/class/student/${person.user.student_id}`)
-    const json = await resStd.json()
-    // console.log(json);
-
-    return {
-      props: {
-        subjects: json,
-        // user: ctx.query.status
-      }
-    }
-  }
-
-
-
-
-}
-const Home = ({ subjects }) => {
+const Home = () => {
+  const [subjects, setSubjects] = useState([])
   const router = useRouter()
+
+  useEffect(() => {
+    // declare the data fetching function
+    const fetchData = async () => {
+      const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${window.localStorage.getItem('token')}`, {
+        method: 'GET',
+        // credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `bearer ${window.localStorage.getItem('token')}`
+        }
+      })
+
+      const person = await resRole.json()
+      console.log(person)
+
+      if (person.role == 'teacher') {
+        const resTch = await fetch(`http://${process.env.ip}:3000/util/getarraybyany/subject/teacher_id/${person.user.teacher_id}`)
+        const json = await resTch.json()
+        console.log(json);
+
+        setSubjects(json)
+
+
+      } else {
+        const resStd = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}`)
+        const json = await resStd.json()
+        console.log(json);
+
+        setSubjects(json)
+      }
+
+    }
+
+    // call the function
+    fetchData()
+      // make sure to catch any error
+      .catch(console.error);
+  }, [])
+
 
   return (<>
     <Swiper
@@ -105,18 +106,9 @@ const Home = ({ subjects }) => {
               </div>
               <div className="subtitle" data-swiper-parallax="-200">
               </div>
-              {/* <div className="subtitle" data-swiper-parallax="-200">
-                Teacher : {sub.teacher_id}
-              </div> */}
               <Link
-                // as={`/home/subject/${sub.teacher_id}`}
                 href={{
                   pathname: `/home/subject/${sub.subject_id}`,
-                  // query: {
-                  //   sid: sub.subject_id,
-                  //   name: sub.subject_name,
-                  //   teacher: sub.teacher_id
-                  // }
                 }} >
                 < lord-icon
                   src="https://cdn.lordicon.com/iifryyua.json"

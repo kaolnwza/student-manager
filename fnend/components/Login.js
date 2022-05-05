@@ -14,7 +14,7 @@ const Login = () => {
         console.log(process.env.ip);
         const res = await fetch(`http://${process.env.ip}:3000/auth/login`, {
             method: 'POST',
-            credentials: 'include',
+            // credentials: 'include',
             body: JSON.stringify({
                 username,
                 password

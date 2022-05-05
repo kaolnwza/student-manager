@@ -3,44 +3,61 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { useState, useEffect } from 'react';
 
-export const getServerSideProps = async (ctx) => {
+// export const getServerSideProps = async (ctx) => {
 
-    const resRole = await fetch(`http://100.26.151.80:3000/auth/role/${ctx.req.cookies.token}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${ctx.req.cookies.token}`
-        }
-    })
 
-    const person = await resRole.json()
-    console.log(person, "fgjfghfhghfg")
-    if (person.role == 'student') {
-        const resStdDetail = await fetch(`http://100.26.151.80:3000/class/student/${person.user.student_id}/subject/` + ctx.query.courseid)
-        const subjectDetail = await resStdDetail.json()
-        return {
-            props: {
-                course: subjectDetail
+// }
 
-            }
-        }
-    } else {
-        const resTchDetail = await fetch(`http://100.26.151.80:3000/subject/detail/` + ctx.query.courseid)
-        const json = await resTchDetail.json()
-        return {
-            props: {
-                course: json
-
-            }
-        }
-    }
-}
-
-const Subject = ({ course }) => {
+const Subject = () => {
+    const [course, setCourse] = useState([-1])
+    const [isLoading, setLoading] = useState(true)
     const router = useRouter()
-    // console.log(router.query.courseid);
+
+    useEffect(() => {
+        // declare the data fetching function
+
+        const fetchData = async () => {
+            setLoading(true)
+            const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${window.localStorage.getItem('token')}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                }
+            })
+
+            const person = await resRole.json()
+
+            if (person.role == 'student') {
+                const resStdDetail = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}/subject/` + router.query.courseid)
+                const subjectDetail = await resStdDetail.json()
+
+                setCourse(subjectDetail)
+
+
+
+            } else {
+                const resTchDetail = await fetch(`http://${process.env.ip}:3000/subject/detail/` + router.query.courseid)
+                const json = await resTchDetail.json()
+
+                setCourse(json)
+                setLoading(false)
+
+
+            }
+        }
+
+        // call the function
+        fetchData()
+            // make sure to catch any error
+            .catch(console.error);
+    }, [])
+
+
+    if (isLoading) return <p>Loading...</p>
     return (<>
         <Row className='h-75 mx-5 justify-content-around' style={{
             background: `linear-gradient(180deg, transparent 30%, #f6eeea 30%)`,

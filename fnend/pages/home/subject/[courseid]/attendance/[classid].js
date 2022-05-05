@@ -3,60 +3,17 @@ import { useRouter } from 'next/router'
 import { Tabs, Tab, Button, Modal, Container, Table, InputGroup, FormControl, Form, ButtonGroup, ToggleButton } from 'react-bootstrap';
 // import { stringifyQuery } from "next/dist/server/server-route-utils";
 
-export const getServerSideProps = async (ctx) => {
+// export const getServerSideProps = async (ctx) => {
 
-    const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `bearer ${ctx.req.cookies.token}`
-        }
-    })
 
-    const person = await resRole.json()
-    console.log(person.user.student_id);
-    if (person.role == 'teacher') {
-        const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + ctx.query.classid, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `bearer ${ctx.req.cookies.token}`
-            }
-        })
-        const classes = await resClass.json()
 
-        return {
-            props: {
-                cls: classes
-            }
-        }
-    } else {
-        const resClass = await fetch(`http://${process.env.ip}:3000/student/attendance/${ctx.query.classid}/${person.user.student_id}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `bearer ${ctx.req.cookies.token}`
-            }
-        })
-        const classes = await resClass.json()
-        console.log(classes);
-        return {
-            props: {
-                cls: classes,
-                std: true
-            }
-        }
-    }
+// }
 
-}
-
-const attendance = ({ cls, std }) => {
-    const [classes, setClasses] = useState(cls);
+const attendance = () => {
+    const [classes, setClasses] = useState([-1]);
     const [refresh, setRefresh] = useState(0);
-
+    const [std, setStd] = useState(false);
+    const [isLoading, setLoading] = useState(false)
     const [key, setKey] = useState(0);
     const [show, setShow] = useState(false);
     const [form, setForm] = useState('');
@@ -64,7 +21,9 @@ const attendance = ({ cls, std }) => {
     const [Note, setNote] = useState('');
 
     const [attendanceId, setAttendanceId] = useState(0)
-    const isEmpty = Object.keys(classes).length === 0;
+    const [isEmpty, setIsEmpty] = useState(true);
+
+    // const isEmpty = ;
     // const [WeeekIndex, setWeekIndex] = useState(0)
 
     const handleExpandClick = (i) => {
@@ -150,20 +109,85 @@ const attendance = ({ cls, std }) => {
         console.log(response);
         setRefresh(refresh + 1)
     }
-
     useEffect(() => {
-        const fetchMyAPI = async () => {
-            const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + rounter.query.classid)
-            const classes = await resClass.json()
-            setClasses(classes)
-            // console.log();
+        setLoading(true)
+        // declare the data fetching function
+        const fetchData = async () => {
+            const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${window.localStorage.getItem('token')}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                }
+            })
 
+            const person = await resRole.json()
+            // console.log(person.user.student_id);
+            if (person.role == 'teacher') {
+                await fetch(`http://${process.env.ip}:3000/attendance/class/` + rounter.query.classid, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                    }
+                }).then((res) => res.json())
+                    .then((data) => {
+                        console.log(data)
+                        setClasses(data)
+                        if (Object.keys(data).length !== 0) {
+                            setIsEmpty(false)
+                        }
+                        setLoading(false)
+                    })
+                // const classes = await resClass.json()
+
+                // console.log(classes);
+
+                // setClasses(classes)
+
+            } else {
+                await fetch(`http://${process.env.ip}:3000/student/attendance/${rounter.query.classid}/${person.user.student_id}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `bearer ${window.localStorage.getItem('token')}`
+                    }
+                }).then((res) => res.json())
+                    .then((data) => {
+                        console.log(data)
+                        setClasses(data)
+                        setStd(true)
+                        if (Object.keys(data).length !== 0) {
+                            setIsEmpty(false)
+                        }
+                        setLoading(false)
+                    })
+
+            }
         }
 
-        fetchMyAPI()
-    }, [refresh])
+        // call the function
+        fetchData()
+            // make sure to catch any error
+            .catch(console.error);
+    }, [])
 
+    // useEffect(() => {
+    //     const fetchMyAPI = async () => {
+    //         const resClass = await fetch(`http://${process.env.ip}:3000/attendance/class/` + rounter.query.classid)
+    //         const classes = await resClass.json()
+    //         setClasses(classes)
+    //         // console.log();
 
+    //     }
+
+    //     fetchMyAPI()
+    // }, [refresh])
+
+    if (isLoading) return <p>Loading...</p>
 
     return (
 
@@ -231,6 +255,8 @@ const attendance = ({ cls, std }) => {
 
                             </tbody>
                         </Table></>
+
+
                     :
 
 
@@ -239,9 +265,15 @@ const attendance = ({ cls, std }) => {
                         onSelect={(k) => setKey(k)}
                         className="mb-3 justify-content-center "
                     >
+                        {/* {classes.map((cls, i) => console.log(cls[0]))} */}
+
                         {classes.map((cls, i) =>
 
-                            <Tab key={i} eventKey={i} title={`${cls[0].attendance_name}`} style={{ height: '40vh', overflowY: 'scroll' }} >
+                            <Tab
+                                key={i}
+                                eventKey={i}
+                                title={`${cls[0].attendance_name}`}
+                                style={{ height: '40vh', overflowY: 'scroll' }} >
 
                                 <Table borderless hover className="text-center" >
                                     <thead>
@@ -255,12 +287,11 @@ const attendance = ({ cls, std }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {cls.map((person, j) =>
+                                        {/* {cls.map((person, j) =>
                                             <tr>
                                                 <td>{person.student_id} </td>
                                                 <td>{person.student_firstname}</td>
                                                 <td>{person.student_lastname}</td>
-                                                {/* {person.attendance_status = 'come'} */}
                                                 <td className="w-25 p-0 m-0">
                                                     {expandedId !== j ?
                                                         person.attendance_status == 'come' ?
@@ -340,7 +371,8 @@ const attendance = ({ cls, std }) => {
                                                     }
                                                 </td>
 
-                                            </tr>)}
+                                            </tr>)
+                                        } */}
                                     </tbody>
                                 </Table>
                             </Tab>)
