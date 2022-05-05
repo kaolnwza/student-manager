@@ -4,6 +4,7 @@ const ErrorHandling = require("./error")
 const jwt = require("jsonwebtoken")
 const queries = require('../db/auth-queries')
 const get_services = require('../services/get-services')
+const { SECRET_KEY } = require('../config/hot-config')
 
 const CreateAccessToken = (user, role) => {
     const payload = {
@@ -17,7 +18,7 @@ const CreateAccessToken = (user, role) => {
 }
 
 const GenerateAccessToken = (req) => {
-    return jwt.sign(req, process.env.SECRET_KEY, { expiresIn: '60567567567567567m' })
+    return jwt.sign(req, SECRET_KEY, { expiresIn: '60567567567567567m' })
 }
 
 

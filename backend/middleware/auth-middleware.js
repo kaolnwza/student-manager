@@ -2,6 +2,7 @@ require('dotenv').config()
 const ErrorHandling = require("../services/error")
 const jwt = require("jsonwebtoken")
 const { createSSRApp } = require('vue')
+const { SECRET_KEY } = require('../config/hot-config')
 
 
 const AuthenticationToken = (credentials) => {
@@ -13,7 +14,7 @@ const AuthenticationToken = (credentials) => {
 
         const token = authHeader.slice(7)
 
-        jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
+        jwt.verify(token, SECRET_KEY, (err, payload) => {
             if (err) {
                 return res.status(401).json(`token err dog : ${err}`)
             }

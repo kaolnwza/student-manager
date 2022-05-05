@@ -1,18 +1,18 @@
-
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const app = express()
 const port = 3000
 require('dotenv').config()
 var cors = require('cors')
+const { FRONTEND_IP } = require('./config/hot-config')
 
 
 const corsOptions = {
-  origin: 'http://' + process.env.FRONTEND_IP + ':8080',
+  origin: 'http://' + FRONTEND_IP + ':8080',
   credentials: true,
 };
-// console.log(process.env.FRONTEND_IP)
-app.options('http://' + process.env.FRONTEND_IP + ':8080', cors())
+// console.log(FRONTEND_IP)
+app.options('http://' + FRONTEND_IP + ':8080', cors())
 
 const router = require("./controllers/controller")
 

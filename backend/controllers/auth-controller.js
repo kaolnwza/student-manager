@@ -3,6 +3,7 @@ const router = express.Router()
 const services = require("../services/auth-services")
 const { AuthenticationToken } = require("../middleware/auth-middleware")
 require('dotenv').config()
+const { FRONTEND_IP } = require('../config/hot-config')
 
 router.post("/login", async (req, res) => {
     console.log('isin')
@@ -20,8 +21,8 @@ router.post("/login", async (req, res) => {
 })
 
 router.get("/ip", async (req, res) => {
-    console.log(process.env.FRONTEND_IP)
-    res.json(process.env.FRONTEND_IP + '')
+    console.log(FRONTEND_IP)
+    res.json(FRONTEND_IP + '')
 })
 
 router.get("/test", async (req, res) => {
