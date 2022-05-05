@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 export const getServerSideProps = async (ctx) => {
 
-    const resRole = await fetch(`http://${process.env.ip}:3000/auth/role/${ctx.req.cookies.token}`, {
+    const resRole = await fetch(`http://100.26.151.80:3000/auth/role/${ctx.req.cookies.token}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -16,9 +16,9 @@ export const getServerSideProps = async (ctx) => {
     })
 
     const person = await resRole.json()
-
+    console.log(person, "fgjfghfhghfg")
     if (person.role == 'student') {
-        const resStdDetail = await fetch(`http://${process.env.ip}:3000/class/student/${person.user.student_id}/subject/` + ctx.query.courseid)
+        const resStdDetail = await fetch(`http://100.26.151.80:3000/class/student/${person.user.student_id}/subject/` + ctx.query.courseid)
         const subjectDetail = await resStdDetail.json()
         return {
             props: {
@@ -27,7 +27,7 @@ export const getServerSideProps = async (ctx) => {
             }
         }
     } else {
-        const resTchDetail = await fetch(`http://${process.env.ip}:3000/subject/detail/` + ctx.query.courseid)
+        const resTchDetail = await fetch(`http://100.26.151.80:3000/subject/detail/` + ctx.query.courseid)
         const json = await resTchDetail.json()
         return {
             props: {
