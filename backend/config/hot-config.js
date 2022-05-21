@@ -8,7 +8,7 @@ const DB_PASSWORD = "supersaiya55"
 const DB_DATABASE = "postgres"
 const DB_USER = "postgres"
 
-const FRONTEND_IP = "localhost"
+const FRONTEND_IP = "34.230.91.85"
 // const FRONTEND_IP = "49.49.222.58"
 // const FRONTEND_IP = "54.91.120.180"
 
