@@ -251,7 +251,7 @@ const Assignment = () => {
                                     <tbody>
                                         {cls.map((person, j) =>
                                             <tr key={j}>
-                                                <td>{person.student_id} {person.score_id}</td>
+                                                <td>{person.student_id}</td>
                                                 <td>{person.student_firstname}</td>
                                                 <td>{person.student_lastname}</td>
                                                 <td >
